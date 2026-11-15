@@ -185,6 +185,69 @@ label{font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:upperca
 /* ---------- Responsive ---------- */
 @media(max-width:1100px){.layout{grid-template-columns:1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.container{padding:16px}.topbar-in{padding:10px 16px}.item{flex-direction:column}.row{flex-direction:column}.stat b{font-size:28px}.stat i{width:44px;height:44px;font-size:22px}}
+
+/* ========== Tema corporativo (sobrescribe estilos anteriores) ========== */
+:root{--navy:#14284b;--ink:#0f172a;--muted:#64748b;--line:#e3e8ef;--bg:#f4f6fa;--blue:#1f4fb4;--corp:#1e3a6e}
+body{background:var(--bg);font-feature-settings:"tnum" 1}
+/* Barra superior */
+.topbar{background:var(--navy);box-shadow:0 1px 0 rgba(255,255,255,.06),0 4px 16px rgba(10,20,40,.25)}
+.topbar::after{height:2px;background:linear-gradient(90deg,#3b6fd4 0%,#3b6fd4 60%,#e8833a 100%)}
+.topbar-in{padding:10px 24px;gap:10px 16px}
+.brand{gap:12px}.brand-logo{width:40px;height:40px;border-radius:9px;background:#fff;padding:2px}
+.brand h1{font-size:17px;font-weight:700;letter-spacing:0}
+.brand small{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#9fb0cc;font-weight:600}
+.top-actions{gap:8px}
+.who{border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:12.5px;font-weight:600;padding:6px 12px}
+.conn{border-radius:8px;font-size:12px;font-weight:600;padding:6px 11px}
+.out{border-radius:8px;font-size:12.5px;font-weight:600;padding:7px 12px;background:transparent;border:1px solid rgba(255,255,255,.22);color:#e6ecf7}
+.out:hover{background:rgba(255,255,255,.12)}
+/* Tarjetas y métricas */
+.container{padding:22px 24px 40px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.stat{min-width:0;border-radius:12px;padding:16px 18px;border:1px solid var(--line);border-top:3px solid var(--c);box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.stat span{font-size:11px;letter-spacing:.08em;font-weight:700;color:var(--muted)}
+.stat b{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.stat i{width:40px;height:40px;font-size:20px;border-radius:10px;background:#f1f4f9;filter:grayscale(.85);opacity:.9;flex:none}
+.card{border-radius:12px;padding:20px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(15,23,42,.04),0 6px 18px rgba(15,23,42,.04)}
+.card h3{font-size:15px;font-weight:700;letter-spacing:.01em;color:var(--navy)}
+.list-head{background:#f8fafc;padding:16px 20px}
+.list-head small{font-size:12px;font-weight:600}
+/* Formularios y botones */
+textarea,input,select{border-radius:8px;border:1px solid #cbd5e1;font-size:14px;padding:10px 12px}
+textarea:focus,input:focus,select:focus{border-color:var(--corp);box-shadow:0 0 0 3px rgba(30,58,110,.14)}
+label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
+.btn{background:var(--corp);border-radius:8px;padding:11px 18px;font-weight:600;font-size:14px;box-shadow:none;letter-spacing:.01em}
+.btn:hover{filter:none;background:#183160}
+.toggle{border:1px solid #cbd5e1;background:#f8fafc;border-radius:8px;font-weight:600;color:#334155}
+.drop{border:1.5px dashed #b6c2d4;border-radius:10px;background:#f8fafc}
+.btn-top-hide,.btn-hide{background:#f1f4f9;color:#475569;border:1px solid var(--line);border-radius:8px;font-weight:600}
+.btn-top-hide:hover,.btn-hide:hover{background:#e7ecf4}
+.btn-show{background:var(--corp);border-radius:8px;font-weight:600}
+.actions button,.actions select{border-radius:7px;font-weight:600;color:#334155}
+/* Lista de actividades */
+.item{padding:14px 20px;border-left-width:4px}
+.badge{border-radius:6px;font-size:10.5px;padding:4px 9px;letter-spacing:.06em;font-weight:700}
+.estado{border-radius:6px;background:#e8eefb;color:#1e3a6e;font-size:11.5px;font-weight:600}
+.txt b{font-size:15px;font-weight:600}
+.sep{background:#f3f7f4;color:#1f6b45;letter-spacing:.04em;text-transform:uppercase;font-size:11.5px}
+#panelHistorial{border:1px solid var(--line);border-top:3px solid #1f8a5b}
+#panelUsuarios{border:1px solid var(--line);border-top:3px solid var(--corp)}
+.foot{font-size:11.5px;letter-spacing:.02em}
+/* Alerta Telegram: acción destacada pero sobria */
+.alerta{border-left:4px solid #b42318}
+.alerta .tip{margin:0 0 12px;font-size:12.5px}
+.btn-alerta{width:100%;background:#b42318;border-radius:8px;font-size:14.5px;padding:13px 16px}
+.btn-alerta:hover{background:#9a1d14}
+#trinoMsg{margin:10px 0 0;font-weight:600;font-size:13px;min-height:18px}
+/* Móvil */
+@media(max-width:600px){
+ .container{padding:14px}.topbar-in{padding:10px 14px}
+ .stats{gap:10px}.stat{padding:12px 14px}.stat b{font-size:24px}
+ .stat i{width:34px;height:34px;font-size:17px}
+ .stat span{font-size:10px}
+ .card{padding:16px}
+ .item{padding:12px 14px}
+}
 </style></head>
 <body>
 <div id="login">
@@ -296,11 +359,11 @@ label{font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:upperca
      <div id="listaUsuarios"></div>
     </div>
 
-    <div class="card" id="cardTrino" style="border-left:5px solid #dc2626">
-     <div class="header-form"><h3>📨 Alerta por Telegram</h3></div>
-     <p class="tip" style="margin:0 0 10px">Avisa al equipo que el turno ya cerró y el relevo se está enviando.</p>
-     <button type="button" class="btn" id="btnTrino" style="width:100%;background:linear-gradient(180deg,#ef4444,#dc2626);box-shadow:0 4px 12px rgba(220,38,38,.3)">🚚 Turno cerrado · Relevo en envío</button>
-     <p id="trinoMsg" style="margin:8px 0 0;font-weight:600"></p>
+    <div class="card alerta" id="cardTrino">
+     <div class="header-form"><h3>Alerta de cierre de turno</h3></div>
+     <p class="tip">Notifica por Telegram al equipo que el turno ya cerró y el relevo se está enviando.</p>
+     <button type="button" class="btn btn-alerta" id="btnTrino">🚚 Turno cerrado · Relevo en envío</button>
+     <p id="trinoMsg"></p>
     </div>
 
     <div class="card list-card">
