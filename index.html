@@ -298,8 +298,8 @@ label{font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:upperca
 
     <div class="card" id="cardTrino" style="border-left:5px solid #dc2626">
      <div class="header-form"><h3>📨 Alerta por Telegram</h3></div>
-     <p class="tip" style="margin:0 0 10px">Avisa al equipo que el trino ya cerró y el relevo se está enviando.</p>
-     <button type="button" class="btn" id="btnTrino" style="width:100%;background:linear-gradient(180deg,#ef4444,#dc2626);box-shadow:0 4px 12px rgba(220,38,38,.3)">🚚 Trino cerrado · Relevo en envío</button>
+     <p class="tip" style="margin:0 0 10px">Avisa al equipo que el turno ya cerró y el relevo se está enviando.</p>
+     <button type="button" class="btn" id="btnTrino" style="width:100%;background:linear-gradient(180deg,#ef4444,#dc2626);box-shadow:0 4px 12px rgba(220,38,38,.3)">🚚 Turno cerrado · Relevo en envío</button>
      <p id="trinoMsg" style="margin:8px 0 0;font-weight:600"></p>
     </div>
 
@@ -548,11 +548,11 @@ window.avisarTrino = async () => {
   const decir = (t, ok) => { m.textContent = t; m.style.color = ok ? '#16a34a' : '#dc2626'; };
   if (TELEGRAM_TOKEN.startsWith('PEGA') || TELEGRAM_CHAT_ID.startsWith('PEGA')) { decir('⚠ Falta configurar el token y el chat_id de Telegram en el código.', false); return; }
   if (Date.now() - ultimoAvisoTrino < 60000) { decir('Ya enviaste la alerta hace menos de 1 minuto.', false); return; }
-  if (!confirm('¿Enviar alerta: "Trino cerrado, relevo en envío"?')) return;
+  if (!confirm('¿Enviar alerta: "Turno cerrado, relevo en envío"?')) return;
   const ahora = new Date(), h = ahora.getHours();
   const turno = (h >= 8 && h < 20) ? 'Día' : 'Noche';
   const quien = (typeof miNombre !== 'undefined' && miNombre) ? miNombre : 'Usuario';
-  const texto = '🚚 TRINO CERRADO\n📤 El relevo se está enviando.\n🕐 Turno: ' + turno + '\n👤 Enviado por: ' + quien + '\n📅 ' + ahora.toLocaleString('es-PE');
+  const texto = '🚚 TURNO CERRADO\n📤 El relevo se está enviando.\n🕐 Turno: ' + turno + '\n👤 Enviado por: ' + quien + '\n📅 ' + ahora.toLocaleString('es-PE');
   b.disabled = true; decir('Enviando…', true);
   try {
     const r = await fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
