@@ -335,6 +335,68 @@ label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
 [data-theme="dark"] .lfoot{background:#101a2e;border-top-color:#2b3753;color:#97a4bd}
 [data-theme="dark"] .lfoot svg{color:#8fb4ff}
 [data-theme="dark"] .field .eye:hover{color:#8fb4ff}
+
+/* Menú lateral */
+.burger{font-size:20px;line-height:1;padding:7px 12px;margin-right:4px}
+.brand{display:flex;align-items:center}
+.drawer-overlay{position:fixed;inset:0;background:rgba(5,10,25,.55);z-index:45}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:min(300px,86vw);background:#0f1c36;color:#e7ecf6;z-index:50;transform:translateX(-102%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:8px 0 32px rgba(0,0,0,.4);visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;font-size:16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.drawer-x{background:transparent;border:1px solid rgba(255,255,255,.22);color:#e7ecf6;border-radius:8px;width:34px;height:34px;font-size:16px;cursor:pointer}
+.drawer-body{padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.drawer-item{width:100%;text-align:left;background:transparent;border:1px solid transparent;color:#e7ecf6;border-radius:10px;font-size:15px;font-weight:600;padding:12px 14px;cursor:pointer;font-family:inherit}
+.drawer-item:hover{background:rgba(255,255,255,.1)}
+.drawer-item.danger{color:#fecaca}
+.drawer-sep{height:1px;background:rgba(255,255,255,.12);margin:8px 0}
+.drawer-alert{border-left:4px solid #b42318;background:rgba(255,255,255,.04);border-radius:10px;padding:12px}
+.menu-title{font-weight:700;font-size:14px;margin-bottom:4px}
+.menu-tip{font-size:12.5px;color:#aab6cc;margin:0 0 12px}
+.menu-item{width:100%;background:#b42318;color:#fff;border:0;border-radius:8px;font-size:14px;font-weight:700;padding:12px 14px;cursor:pointer;font-family:inherit}
+.menu-item:hover{background:#9a1d14}
+.menu-item:disabled{opacity:.6;cursor:default}
+#btnMenu[aria-expanded="true"]{background:rgba(255,255,255,.2)}
+/* Pulido del formulario */
+.tabs{display:flex;gap:4px;background:#eef2f7;border-radius:10px;padding:4px;margin:10px 0 2px}
+.tab{flex:1;border:0;background:transparent;padding:9px 10px;border-radius:7px;font-weight:700;font-size:13px;color:#64748b;cursor:pointer;font-family:inherit}
+.tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+.row{align-items:stretch;margin-bottom:10px}
+.row>select,.row>input,.row>.btn{margin:0;height:44px;padding-top:0;padding-bottom:0}
+#msg,#msgReal{margin:8px 0 0;font-weight:700;font-size:13px}
+#msg:empty,#msgReal:empty{display:none}
+#paneNuevo>select{margin-bottom:10px}
+textarea{min-height:96px}
+[data-theme="dark"] .tabs{background:#101a2e}
+[data-theme="dark"] .tab{color:#97a4bd}
+[data-theme="dark"] .tab.active{background:#1b2a4a;color:#fff;box-shadow:none}
+/* Tarjetas de resumen */
+.stat{border:1px solid var(--line);border-left:4px solid var(--c);padding:16px 18px;background:#fff}
+.stat i{width:44px;height:44px;border-radius:50%;background:color-mix(in srgb,var(--c) 12%,white);color:var(--c);filter:none;opacity:1;display:flex;align-items:center;justify-content:center;flex:none}
+.stat i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stat b{font-size:32px;font-weight:800;line-height:1}
+[data-theme="dark"] .stat{background:#141d32;border-color:#2b3753;border-left-color:var(--c)}
+[data-theme="dark"] .stat i{background:color-mix(in srgb,var(--c) 22%,#141d32)}
+@media(max-width:600px){.stat i{display:none}.stat b{font-size:26px}}
+/* Resumen desplegable */
+.stats-bar{display:flex;align-items:center;gap:12px;margin:0 0 10px}
+.stats-bar b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.stats-mini{flex:1;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stats-bar .btn-top-hide{margin-left:auto}
+.stats.collapsed{display:none}
+/* Historial y Usuarios a pantalla completa */
+#panelHistorial:not(.hidden),#panelUsuarios:not(.hidden){position:fixed;inset:0;z-index:40;margin:0;border-radius:0;border:0;overflow-y:auto;overscroll-behavior:contain;padding:0 max(20px,calc((100vw - 1100px) / 2)) 40px;background:var(--bg)}
+.pantalla-head{position:sticky;top:0;z-index:2;background:var(--bg);margin:0 !important;padding:16px 0;gap:16px;justify-content:flex-start;border-bottom:1px solid var(--line);margin-bottom:16px !important}
+.pantalla-head h3{flex:1;font-size:19px}
+.btn-back{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.btn-back:hover{filter:brightness(1.15)}
+@media(max-width:600px){.pantalla-head{flex-wrap:wrap;gap:8px}.pantalla-head h3{flex-basis:100%;font-size:16px}}
+[data-theme="dark"] .btn-back{background:#2a4a8a}
+/* Usuarios conectados */
+.pres{display:inline-flex;align-items:center;gap:7px;max-width:320px;font-size:12px;font-weight:600;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#dbe5f7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pres::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:#64748b}
+.pres.on{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.4);color:#bbf7d0}
+.pres.on::before{background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.25)}
+@media(max-width:600px){.pres{max-width:200px;font-size:11.5px;padding:5px 9px}}
 </style></head>
 <body>
 <div id="login">
@@ -372,38 +434,87 @@ label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
 <div class="hidden" id="app">
  <header class="topbar"><div class="topbar-in">
   <div class="brand">
+   <button type="button" class="out burger" id="btnMenu" aria-label="Abrir menú" aria-controls="drawer" aria-expanded="false">☰</button>
    <div class="brand-logo"><img data-logo alt="Relevo de Turno"></div>
    <div><h1>Relevo de Turno</h1><small>REVERSA · Logística &amp; Devoluciones</small></div>
   </div>
   <div class="top-actions">
+   <span class="pres hidden" id="pres"></span>
    <span class="conn" id="conn">Conectando…</span>
    <span class="who" id="who"></span>
-   <button type="button" class="out" id="btnTema" aria-label="Cambiar entre modo claro y oscuro"><span class="t-osc">Modo oscuro</span><span class="t-cla">Modo claro</span></button>
-    <button type="button" class="out" id="btnHistorial">Historial</button>
-   <button type="button" class="out hidden" id="btnInstalar">📲 Instalar app</button>
-   <button type="button" class="out hidden" id="btnUsuarios">Usuarios</button>
-   <button type="button" class="out" id="btnSalir">Cerrar sesión</button>
   </div>
  </div></header>
 
+ <div class="drawer-overlay hidden" id="drawerOverlay"></div>
+ <nav class="drawer" id="drawer" aria-label="Menú principal" aria-hidden="true">
+  <div class="drawer-head"><b>☰ Menú</b><button type="button" class="drawer-x" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button></div>
+  <div class="drawer-body">
+   <button type="button" class="drawer-item" id="btnHistorial">📜 Historial</button>
+   <button type="button" class="drawer-item hidden" id="btnUsuarios">👥 Usuarios</button>
+   <button type="button" class="drawer-item hidden" id="btnInstalar">📲 Instalar app</button>
+   <button type="button" class="drawer-item" id="btnTema" aria-label="Cambiar entre modo claro y oscuro"><span class="t-osc">🌙 Modo oscuro</span><span class="t-cla">☀️ Modo claro</span></button>
+   <div class="drawer-sep"></div>
+   <div class="drawer-alert">
+    <div class="menu-title">Alerta de cierre de turno</div>
+    <p class="menu-tip">Notifica por Telegram al equipo que el turno ya cerró y el relevo se está enviando.</p>
+    <button type="button" class="menu-item" id="btnTrino">🚚 Turno cerrado · Relevo en envío</button>
+    <p id="trinoMsg"></p>
+   </div>
+   <div class="drawer-sep"></div>
+   <button type="button" class="drawer-item danger" id="btnSalir">🚪 Cerrar sesión</button>
+  </div>
+ </nav>
+
  <main class="container">
-  <section class="stats">
-   <div class="stat" style="--c:#2563eb"><div><span>Total</span><b id="sTotal">0</b></div><i>📋</i></div>
-   <div class="stat" style="--c:#dc2626"><div><span>Críticas</span><b id="sCrit">0</b></div><i>🚨</i></div>
-   <div class="stat" style="--c:#ca8a04"><div><span>Pendientes</span><b id="sPend">0</b></div><i>⏳</i></div>
-   <div class="stat" style="--c:#16a34a"><div><span>Completadas</span><b id="sComp">0</b></div><i>✅</i></div>
+  <div class="stats-bar">
+   <b>Resumen del relevo</b>
+   <span class="stats-mini hidden" id="statsMini"></span>
+   <button type="button" class="btn-top-hide" id="btnStats" aria-expanded="true" aria-controls="statsSec">Ocultar</button>
+  </div>
+  <section class="stats" id="statsSec">
+   <div class="stat" style="--c:#2563eb"><div><span>Total</span><b id="sTotal">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg></i></div>
+   <div class="stat" style="--c:#dc2626"><div><span>Críticas</span><b id="sCrit">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></i></div>
+   <div class="stat" style="--c:#ca8a04"><div><span>Pendientes</span><b id="sPend">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i></div>
+   <div class="stat" style="--c:#16a34a"><div><span>Completadas</span><b id="sComp">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg></i></div>
   </section>
 
   <div class="layout">
    <aside class="side">
     <div class="card" id="cardAgregar">
-     <div class="header-form"><h3>Agregar relevo</h3><button type="button" class="btn-top-hide" id="btnOcultarForm" onclick="toggleForm()">Ocultar</button></div>
+     <div class="header-form"><h3>Registro del relevo</h3><button type="button" class="btn-top-hide" id="btnOcultarForm" onclick="toggleForm()">Ocultar</button></div>
      <div id="formRelevo">
-      <label>Escribe el relevo</label>
-      <textarea id="texto" placeholder="Escribe aquí el relevo... Puedes pegar varias filas desde Excel, cada línea será un relevo."></textarea>
-      <p class="tip">Tip: puedes copiar varias filas desde Excel y pegarlas aquí.</p>
+      <div class="tabs" role="tablist">
+       <button type="button" class="tab active" id="tabNuevo" role="tab" aria-selected="true">Nuevo relevo</button>
+       <button type="button" class="tab" id="tabReal" role="tab" aria-selected="false">Ya realizadas</button>
+      </div>
 
-      <button type="button" class="toggle" id="btnAdjuntar" onclick="toggleAdjuntar()">📎 Adjuntar archivo &nbsp;▸ <span style="font-weight:400;color:#64748b">Mostrar / Ocultar</span></button>
+      <div id="paneNuevo">
+       <label for="plantilla">Opción predeterminada</label>
+       <select id="plantilla">
+        <option value="">— Elegir una opción —</option>
+        <option value="ANCLAR">ANCLAR PEDIDOS QUE ESTÁ EN SU ZONA RESPECTIVA (elegir zona BU / Seller)</option>
+        <option>DESPACHAR TOTTUS Y ENVIAR CORREO</option>
+        <option>DESPACHAR 1P CD VES Y ENVIAR CORREO</option>
+        <option>DESPACHAR BTL Y ENVIAR CORREO</option>
+        <option>DESPACHAR CD VES Y ENVIAR CORREO</option>
+        <option>DESPACHAR SODIMAC Y ENVIAR CORREO</option>
+        <option>ENVIAR CORREO DE 1P CD VES</option>
+        <option>ENVIAR CORREO DE SODIMAC</option>
+        <option>ENVIAR CORREO DE TEMPLATE INTERNACIONAL</option>
+        <option>ENVIAR CORREO DE TOTTUS CAMBIO</option>
+        <option>MANDAR CORREO DE BTL</option>
+        <option>MANDAR CORREO DE CD VES</option>
+        <option>PENDIENTE REALIZAR INVENTARIO DE LA ZONA</option>
+       </select>
+       <div class="row hidden" id="filaZona">
+        <input id="plantillaZona" placeholder="Zona (BU / Seller) donde está anclado">
+        <button type="button" class="btn" id="btnPlantilla" style="flex:0 0 auto">Añadir</button>
+       </div>
+
+       <label for="texto">Detalle del relevo</label>
+       <textarea id="texto" placeholder="Escribe aquí el relevo, o elige una opción predeterminada. Puedes pegar varias filas desde Excel: cada línea será un relevo."></textarea>
+
+       <button type="button" class="toggle" id="btnAdjuntar" onclick="toggleAdjuntar()">📎 Adjuntar archivo &nbsp;▸ <span style="font-weight:400;color:#64748b">Mostrar / Ocultar</span></button>
       <div id="zonaAdjuntar" class="hidden">
        <label>Adjuntar archivo Excel / archivo</label>
        <div class="drop" id="drop" onclick="document.getElementById('file').click()">
@@ -419,7 +530,16 @@ label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
 
       <label>Prioridad</label>
       <div class="row"><select id="prior"><option>CRÍTICA</option><option>ALTA</option><option selected>MEDIA</option><option>BAJA</option></select><button class="btn" id="btnAgregar" onclick="agregar()">+ Agregar</button></div>
-      <p id="msg" style="color:#16a34a"></p>
+       <p id="msg" style="color:#16a34a"></p>
+      </div>
+
+      <div id="paneReal" class="hidden">
+       <label for="textoReal">Actividades realizadas</label>
+       <textarea id="textoReal" placeholder="Escribe aquí lo que ya se realizó en el turno. Cada línea será una actividad."></textarea>
+       <p class="tip">Se registran como completadas, con tu nombre y la hora, y pasan al historial al terminar el turno.</p>
+       <button type="button" class="btn" id="btnRealizadas" style="width:100%;height:44px">✅ Registrar como realizadas</button>
+       <p id="msgReal" style="color:#16a34a"></p>
+      </div>
      </div>
      <div id="formOculto" class="hidden collapsed-bar"><span style="color:#64748b;font-weight:600">Formulario oculto</span><button type="button" class="btn-show" onclick="toggleForm()">Mostrar</button></div>
     </div>
@@ -427,14 +547,14 @@ label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
 
    <section>
     <div class="card hidden" id="panelHistorial">
-     <div class="header-form"><h3>Historial de actividades completadas</h3><button type="button" class="btn-top-hide" id="btnCerrarH">Cerrar</button></div>
+     <div class="header-form pantalla-head"><button type="button" class="btn-back" id="btnCerrarH">← Volver al menú principal</button><h3>Historial de actividades completadas</h3></div>
      <input id="hBuscar" placeholder="Buscar en el historial (texto, autor, turno)…">
      <p class="tip">Las completadas se guardan aquí al terminar cada turno: día 08:00–20:00 · noche 20:00–08:00.</p>
      <div id="listaHistorial"></div>
     </div>
 
     <div class="card hidden" id="panelUsuarios">
-     <div class="header-form"><h3>Gestión de usuarios <span style="font-size:12px;color:#64748b;font-weight:600">(solo admin)</span></h3></div>
+     <div class="header-form pantalla-head"><button type="button" class="btn-back" id="btnCerrarU">← Volver al menú principal</button><h3>Gestión de usuarios <span style="font-size:12px;color:#64748b;font-weight:600">(solo admin)</span></h3></div>
      <div class="ugrid">
       <div><label for="uNom">Nombres</label><input id="uNom" placeholder="Ej: Juan Carlos"></div>
       <div><label for="uApe">Apellidos</label><input id="uApe" placeholder="Ej: Pérez Quispe"></div>
@@ -447,17 +567,11 @@ label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
      <div id="listaUsuarios"></div>
     </div>
 
-    <div class="card alerta" id="cardTrino">
-     <div class="header-form"><h3>Alerta de cierre de turno</h3></div>
-     <p class="tip">Notifica por Telegram al equipo que el turno ya cerró y el relevo se está enviando.</p>
-     <button type="button" class="btn btn-alerta" id="btnTrino">🚚 Turno cerrado · Relevo en envío</button>
-     <p id="trinoMsg"></p>
-    </div>
 
     <div class="card list-card">
      <div class="list-head"><h3>Actividades del relevo</h3><small>Ordenadas por prioridad</small></div>
      <div id="lista"></div>
-     <p id="vacio">Sin relevos todavía.</p>
+     <p id="vacio"><span style="font-size:34px;display:block;margin-bottom:8px">📋</span><b style="display:block;color:#64748b;font-size:15px">Sin relevos todavía</b>Las actividades que agregues aparecerán aquí, ordenadas por prioridad.</p>
     </div>
    </section>
   </div>
@@ -467,7 +581,7 @@ label{font-size:11px;letter-spacing:.07em;font-weight:700;color:#475569}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref as dbRef, update, get, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref as dbRef, update, get, onValue, serverTimestamp, set, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { getAuth, initializeAuth, setPersistence, browserSessionPersistence, inMemoryPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -507,6 +621,62 @@ function leerArchivo(f) {
   $('fileName').textContent = '✅ ' + f.name + ' (' + Math.round(f.size / 1024) + ' KB) listo para agregar';
   if (!$('texto').value.trim()) $('texto').value = 'Relevo con archivo: ' + f.name;
 }
+
+// ---- Actividades realizadas (se guardan ya completadas)
+$('btnRealizadas').addEventListener('click', async () => {
+  const lineas = $('textoReal').value.split(/\n/).map(x => x.split('\t')[0].trim()).filter(Boolean);
+  if (!lineas.length) return alert('Escribe las actividades realizadas');
+  const btn = $('btnRealizadas'), msg = $('msgReal'); btn.disabled = true;
+  try {
+    const base = Date.now(), cambios = {};
+    lineas.forEach((t, i) => {
+      cambios['relevos/r' + base + '_' + String(i).padStart(3, '0')] = {
+        texto: t, ref: '', prior: 'MEDIA', estado: 'Completada', autor: miNombre,
+        creado: serverTimestamp(), completado: serverTimestamp(), completadoPor: miNombre
+      };
+    });
+    await update(dbRef(db), cambios);
+    $('textoReal').value = '';
+    msg.style.color = '#16a34a';
+    msg.textContent = 'Se registraron ' + lineas.length + ' actividad(es) realizada(s)';
+  } catch (e) {
+    console.error(e);
+    msg.style.color = '#dc2626';
+    msg.textContent = 'Error al guardar: ' + (e.code || e.message);
+  } finally {
+    btn.disabled = false;
+    setTimeout(() => { msg.textContent = ''; }, 4000);
+  }
+});
+
+// ---- Opciones predeterminadas (se añaden al detalle del relevo)
+function anadirLinea(t) {
+  const ta = $('texto');
+  ta.value = ta.value.trim() ? ta.value.replace(/\s+$/, '') + '\n' + t : t;
+  ta.focus();
+}
+$('plantilla').addEventListener('change', () => {
+  const v = $('plantilla').value, fz = $('filaZona');
+  if (v === 'ANCLAR') { fz.classList.remove('hidden'); $('plantillaZona').focus(); return; }
+  fz.classList.add('hidden');
+  if (v) { anadirLinea(v); $('plantilla').value = ''; }
+});
+$('btnPlantilla').addEventListener('click', () => {
+  const zona = $('plantillaZona').value.trim();
+  if (!zona) { $('plantillaZona').focus(); return alert('Escribe la zona (BU / Seller)'); }
+  anadirLinea('ANCLAR PEDIDOS QUE ESTÁ EN SU ZONA RESPECTIVA — ZONA: ' + zona.toUpperCase());
+  $('plantilla').value = ''; $('plantillaZona').value = ''; $('filaZona').classList.add('hidden');
+});
+
+// ---- Pestañas: nuevo relevo / ya realizadas
+function verPestana(real) {
+  $('paneNuevo').classList.toggle('hidden', real);
+  $('paneReal').classList.toggle('hidden', !real);
+  $('tabNuevo').classList.toggle('active', !real); $('tabNuevo').setAttribute('aria-selected', String(!real));
+  $('tabReal').classList.toggle('active', real); $('tabReal').setAttribute('aria-selected', String(real));
+}
+$('tabNuevo').addEventListener('click', () => verPestana(false));
+$('tabReal').addEventListener('click', () => verPestana(true));
 
 // ---- UI
 window.toggleForm = () => {
@@ -688,7 +858,7 @@ $('loginForm').addEventListener('submit', async e => {
     $('lerr').textContent = m[er.code] || ('Error: ' + (er.code || er.message));
   } finally { btn.disabled = false; }
 });
-$('btnSalir').addEventListener('click', () => signOut(auth));
+$('btnSalir').addEventListener('click', async () => { await detenerPresencia(); signOut(auth); });
 
 // ---- Alerta Telegram: trino cerrado / relevo en envío
 const TELEGRAM_TOKEN = "9029769385:AAGqucqxSsMZdUDuBvO-WFfJymYG5IT4rdk";
@@ -718,6 +888,45 @@ window.avisarTrino = async () => {
 };
 document.getElementById('btnTrino').addEventListener('click', window.avisarTrino);
 
+// ---- Resumen desplegable (recuerda si lo dejaste oculto)
+(function () {
+  const sec = $('statsSec'), btn = $('btnStats'), mini = $('statsMini');
+  const ids = [['sTotal', 'Total'], ['sCrit', 'Críticas'], ['sPend', 'Pendientes'], ['sComp', 'Completadas']];
+  const resumir = () => { mini.textContent = ids.map(([i, n]) => n + ' ' + $(i).textContent).join(' · '); };
+  const aplicar = oculto => {
+    sec.classList.toggle('collapsed', oculto);
+    mini.classList.toggle('hidden', !oculto);
+    btn.textContent = oculto ? 'Mostrar' : 'Ocultar';
+    btn.setAttribute('aria-expanded', String(!oculto));
+    resumir();
+  };
+  btn.addEventListener('click', () => {
+    const oculto = !sec.classList.contains('collapsed');
+    aplicar(oculto);
+    try { localStorage.setItem('resumenOculto', oculto ? '1' : '0'); } catch (e) {}
+  });
+  ids.forEach(([i]) => new MutationObserver(resumir).observe($(i), { childList: true, characterData: true, subtree: true }));
+  let g = false; try { g = localStorage.getItem('resumenOculto') === '1'; } catch (e) {}
+  aplicar(g);
+})();
+
+// ---- Menú lateral
+const menuBtn = $('btnMenu'), drawer = $('drawer'), overlay = $('drawerOverlay');
+function abrirMenu() {
+  drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
+  overlay.classList.remove('hidden'); menuBtn.setAttribute('aria-expanded', 'true');
+}
+function cerrarMenu() {
+  drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
+  overlay.classList.add('hidden'); menuBtn.setAttribute('aria-expanded', 'false');
+}
+menuBtn.addEventListener('click', abrirMenu);
+$('btnCerrarMenu').addEventListener('click', cerrarMenu);
+overlay.addEventListener('click', cerrarMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { cerrarMenu(); $('panelHistorial').classList.add('hidden'); $('panelUsuarios').classList.add('hidden'); } });
+// al usar una opción del menú, se cierra solo (la alerta de turno queda abierta para mostrar su mensaje)
+drawer.querySelectorAll('.drawer-item').forEach(b => b.addEventListener('click', cerrarMenu));
+
 
 // ---- Panel de usuarios (solo admin)
 // Segunda instancia de Firebase: así el admin crea cuentas sin cerrar su propia sesión
@@ -729,7 +938,11 @@ let usuarios = [], unsubU = null;
 const CATEGORIAS = ['Operario', 'Asistente', 'Administrativo'];
 const limpiar = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
-$('btnUsuarios').addEventListener('click', () => $('panelUsuarios').classList.toggle('hidden'));
+$('btnUsuarios').addEventListener('click', () => {
+  $('panelHistorial').classList.add('hidden');
+  const pu = $('panelUsuarios'); pu.classList.remove('hidden'); pu.scrollTop = 0;
+});
+$('btnCerrarU').addEventListener('click', () => $('panelUsuarios').classList.add('hidden'));
 function sugerirUsuario() {
   if ($('uUser').dataset.manual) return;
   const n = limpiar(($('uNom').value.trim().split(/\s+/)[0]) || '');
@@ -860,8 +1073,9 @@ window.restaurar = async id => {
   catch (e) { alert('Error: ' + (e.code || e.message)); }
 };
 $('btnHistorial').addEventListener('click', () => {
-  const pn = $('panelHistorial'); pn.classList.toggle('hidden');
-  if (!pn.classList.contains('hidden')) { escucharHistorial(); renderHistorial(); pn.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  $('panelUsuarios').classList.add('hidden');
+  const pn = $('panelHistorial'); pn.classList.remove('hidden'); pn.scrollTop = 0;
+  escucharHistorial(); renderHistorial();
 });
 $('btnCerrarH').addEventListener('click', () => $('panelHistorial').classList.add('hidden'));
 $('hBuscar').addEventListener('input', renderHistorial);
@@ -907,6 +1121,45 @@ function mostrarSplash(uid) {
 
 // ---- Tiempo real (solo con sesión iniciada)
 let unsub = null;
+// ---- Presencia: quién más está conectado
+const sesionId = Math.random().toString(36).slice(2, 10);
+let presRef = null, unsubConn = null, unsubPres = null, miUid = '';
+function pararEscuchaPresencia() {
+  if (unsubConn) { unsubConn(); unsubConn = null; }
+  if (unsubPres) { unsubPres(); unsubPres = null; }
+}
+function iniciarPresencia(user) {
+  pararEscuchaPresencia();
+  miUid = user.uid;
+  presRef = dbRef(db, 'presencia/' + user.uid + '/' + sesionId);
+  unsubConn = onValue(dbRef(db, '.info/connected'), snap => {
+    if (snap.val() !== true || !presRef) return;
+    const r = presRef;
+    onDisconnect(r).remove()
+      .then(() => set(r, { nombre: miNombre, rol: miRol, desde: serverTimestamp() }))
+      .catch(e => console.error('Presencia: no se pudo registrar', e));
+  });
+  unsubPres = onValue(dbRef(db, 'presencia'), snap => {
+    const v = snap.val() || {}, otros = [];
+    Object.entries(v).forEach(([uid, ses]) => {
+      if (uid === miUid) return;
+      const p = Object.values(ses || {})[0] || {};
+      otros.push({ nombre: p.nombre || 'Usuario', rol: p.rol || '' });
+    });
+    const el = $('pres');
+    el.classList.remove('hidden');
+    if (!otros.length) { el.classList.remove('on'); el.textContent = 'Solo tú conectado'; el.title = 'Nadie más está conectado ahora'; return; }
+    el.classList.add('on');
+    const n = otros.length, nombres = otros.slice(0, 2).map(o => o.nombre).join(', ');
+    el.textContent = n + (n > 1 ? ' conectados: ' : ' conectado: ') + nombres + (n > 2 ? ' +' + (n - 2) : '');
+    el.title = 'Conectados ahora:\n' + otros.map(o => '• ' + o.nombre + (o.rol ? ' (' + o.rol + ')' : '')).join('\n');
+  }, err => { console.error('Presencia: sin acceso (revisa las reglas)', err); $('pres').classList.add('hidden'); });
+}
+async function detenerPresencia() {
+  const r = presRef; presRef = null; pararEscuchaPresencia();
+  if (r) { try { await remove(r); } catch (e) { /* onDisconnect lo limpia igual */ } }
+}
+
 onAuthStateChanged(auth, async user => {
   if (unsub) { unsub(); unsub = null; }
   if (unsubU) { unsubU(); unsubU = null; }
@@ -914,6 +1167,7 @@ onAuthStateChanged(auth, async user => {
   if (unsubH) { unsubH(); unsubH = null; }
   historial = [];
   if (!user) {
+    pararEscuchaPresencia(); presRef = null; $('pres').classList.add('hidden');
     $('panelHistorial').classList.add('hidden');
     $('splash').classList.add('hidden');
     try { sessionStorage.removeItem(SPLASH_KEY); } catch (_) {}
@@ -944,6 +1198,7 @@ onAuthStateChanged(auth, async user => {
   $('login').style.display = 'none';
   $('app').classList.remove('hidden');
   $('who').textContent = etiqueta;
+  iniciarPresencia(user);
   $('btnUsuarios').classList.toggle('hidden', !esAdmin);
   if (esAdmin) escucharUsuarios();
   setConn('Conectando…');
