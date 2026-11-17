@@ -426,6 +426,68 @@ textarea{min-height:96px}
   .stat{padding:18px 22px}
 }
 @media(max-width:1100px){.item{flex-wrap:wrap}}
+
+/* ---- Resumen completo + detalle ---- */
+.stat .det{display:block;margin-top:8px;padding:0;border:0;background:none;color:var(--c);font-size:12px;font-weight:700;cursor:pointer;text-align:left}
+.stat .det:hover{text-decoration:underline}
+.ref.esc{color:#b91c1c!important;font-weight:700}
+[data-theme="dark"] .ref.esc{color:#f87171!important}
+#panelDetalle:not(.hidden){position:fixed;inset:0;z-index:40;margin:0;border-radius:0;border:0;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);padding:0 max(clamp(16px,2.5vw,56px),calc((100vw - 1100px) / 2)) 40px}
+.dchips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.dchip{border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
+.dchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.dchip small{opacity:.75;margin-left:4px;font-weight:700}
+[data-theme="dark"] .dchip{background:#141d32;border-color:#2b3753;color:#e2e8f0}
+[data-theme="dark"] .dchip.on{background:#2563eb;border-color:#2563eb;color:#fff}
+
+/* ---- Resumen v4: sobrio, agrupado y clicable ---- */
+:root{--kpi-bg:#fff;--kpi-hover:#f6f8fc;--kpi-crit:#b91c1c}
+[data-theme="dark"]{--kpi-bg:#141d32;--kpi-hover:#1b2742;--kpi-crit:#f87171}
+.stats-bar b{font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:700}
+.stats{display:block;margin-bottom:20px}
+.kpis{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.kpi-row{display:grid;grid-template-columns:104px repeat(4,minmax(0,1fr));gap:1px;background:var(--line)}
+.kpi-title{background:var(--kpi-bg);display:flex;align-items:center;padding:0 18px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.kpi{position:relative;background:var(--kpi-bg);border:0;border-radius:0;margin:0;padding:14px 40px 14px 18px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:background .15s}
+.kpi:hover{background:var(--kpi-hover)}
+.kpi:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.kpi::after{content:"";position:absolute;right:20px;top:50%;width:7px;height:7px;margin-top:-4px;border-right:2px solid var(--muted);border-top:2px solid var(--muted);transform:rotate(45deg);opacity:.35;transition:opacity .15s,transform .15s}
+.kpi:hover::after,.kpi:focus-visible::after{opacity:1;transform:translateX(2px) rotate(45deg)}
+.kpi-l{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap}
+.kpi-n{font-size:28px;line-height:1;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi[data-zero="1"] .kpi-n{color:var(--muted);opacity:.5}
+.kpi[data-dot="crit"]:not([data-zero="1"]) .kpi-n{color:var(--kpi-crit)}
+.kpi-dot{flex:none;width:9px;height:9px;border-radius:50%;box-sizing:border-box;border:2px solid var(--c,transparent);background:transparent;display:none}
+.kpi:not([data-dot="none"]) .kpi-dot{display:inline-block}
+.kpi[data-dot="pend"]{--c:#94a3b8}
+.kpi[data-dot="prog"]{--c:#2563eb}
+.kpi[data-dot="prog"] .kpi-dot{background:linear-gradient(90deg,var(--c) 50%,transparent 50%)}
+.kpi[data-dot="comp"]{--c:#16a34a}
+.kpi[data-dot="comp"] .kpi-dot,.kpi[data-dot="crit"] .kpi-dot,.kpi[data-dot="alta"] .kpi-dot,.kpi[data-dot="media"] .kpi-dot,.kpi[data-dot="baja"] .kpi-dot{background:var(--c)}
+.kpi[data-dot="crit"]{--c:#dc2626}
+.kpi[data-dot="alta"]{--c:#ea580c}
+.kpi[data-dot="media"]{--c:#ca8a04}
+.kpi[data-dot="baja"]{--c:#94a3b8}
+.kpi-prog{background:var(--kpi-bg);display:flex;align-items:center;gap:14px;padding:11px 18px;font-size:12.5px;font-weight:500;color:var(--muted)}
+.kpi-bar{flex:1;height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+.kpi-bar>span{display:block;height:100%;width:0;border-radius:99px;background:#16a34a;transition:width .3s}
+#kpiProgPct{font-variant-numeric:tabular-nums;min-width:40px;text-align:right;color:var(--ink);font-weight:600}
+@media(max-width:700px){
+  .kpi-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi-title{grid-column:1/-1;padding:9px 16px 7px}
+  .kpi{padding:12px 34px 12px 16px}
+  .kpi-n{font-size:24px}
+  .kpi-prog{flex-wrap:wrap;gap:8px 12px}
+  .kpi-bar{flex-basis:100%;order:3}
+}
+@media(prefers-reduced-motion:reduce){.kpi,.kpi::after,.kpi-bar>span{transition:none}}
+/* Paneles a pantalla completa: mismo ancho que la pantalla principal (sin márgenes vacíos) */
+#panelDetalle:not(.hidden),
+#panelHistorial:not(.hidden),
+#panelUsuarios:not(.hidden){
+  padding-left:clamp(16px,2.5vw,56px);
+  padding-right:clamp(16px,2.5vw,56px);
+}
 </style></head>
 <body>
 <div id="login">
@@ -501,10 +563,27 @@ textarea{min-height:96px}
    <button type="button" class="btn-top-hide" id="btnStats" aria-expanded="true" aria-controls="statsSec">Ocultar</button>
   </div>
   <section class="stats" id="statsSec">
-   <div class="stat" style="--c:#2563eb"><div><span>Total</span><b id="sTotal">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg></i></div>
-   <div class="stat" style="--c:#dc2626"><div><span>Críticas</span><b id="sCrit">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></i></div>
-   <div class="stat" style="--c:#ca8a04"><div><span>Pendientes</span><b id="sPend">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i></div>
-   <div class="stat" style="--c:#16a34a"><div><span>Completadas</span><b id="sComp">0</b></div><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg></i></div>
+   <div class="kpis">
+    <div class="kpi-row">
+     <div class="kpi-title">Estado</div>
+     <button type="button" class="kpi" data-dot="none" onclick="verDetalle('TOTAL')" title="Ver detalle: todas las tareas" aria-label="Total, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Total</span><span class="kpi-n" id="sTotal">0</span></button>
+     <button type="button" class="kpi" data-dot="pend" onclick="verDetalle('Pendiente')" title="Ver detalle: pendientes" aria-label="Pendientes, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Pendientes</span><span class="kpi-n" id="sPend">0</span></button>
+     <button type="button" class="kpi" data-dot="prog" onclick="verDetalle('En progreso')" title="Ver detalle: en progreso" aria-label="En progreso, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>En progreso</span><span class="kpi-n" id="sProg">0</span></button>
+     <button type="button" class="kpi" data-dot="comp" onclick="verDetalle('Completada')" title="Ver detalle: completadas" aria-label="Completadas, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Completadas</span><span class="kpi-n" id="sComp">0</span></button>
+    </div>
+    <div class="kpi-row">
+     <div class="kpi-title">Prioridad</div>
+     <button type="button" class="kpi" data-dot="crit" onclick="verDetalle('CRÍTICA')" title="Ver detalle: críticas" aria-label="Críticas, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Críticas</span><span class="kpi-n" id="sCrit">0</span></button>
+     <button type="button" class="kpi" data-dot="alta" onclick="verDetalle('ALTA')" title="Ver detalle: altas" aria-label="Altas, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Altas</span><span class="kpi-n" id="sAlta">0</span></button>
+     <button type="button" class="kpi" data-dot="media" onclick="verDetalle('MEDIA')" title="Ver detalle: medias" aria-label="Medias, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Medias</span><span class="kpi-n" id="sMedia">0</span></button>
+     <button type="button" class="kpi" data-dot="baja" onclick="verDetalle('BAJA')" title="Ver detalle: bajas" aria-label="Bajas, ver detalle"><span class="kpi-l"><i class="kpi-dot"></i>Bajas</span><span class="kpi-n" id="sBaja">0</span></button>
+    </div>
+    <div class="kpi-prog">
+     <span id="kpiProgTxt">Sin tareas registradas</span>
+     <span class="kpi-bar"><span id="kpiProgBar"></span></span>
+     <span id="kpiProgPct">0 %</span>
+    </div>
+   </div>
   </section>
 
   <div class="layout">
@@ -580,6 +659,12 @@ textarea{min-height:96px}
      <input id="hBuscar" placeholder="Buscar en el historial (texto, autor, turno)…">
      <p class="tip">Las completadas se guardan aquí al terminar cada turno: día 08:00–20:00 · noche 20:00–08:00.</p>
      <div id="listaHistorial"></div>
+    </div>
+
+    <div class="card hidden" id="panelDetalle">
+     <div class="header-form pantalla-head"><button type="button" class="btn-back" id="btnCerrarD">← Volver al resumen</button><h3 id="dTitulo">Detalle del resumen</h3></div>
+     <div class="dchips" id="dChips"></div>
+     <div id="listaDetalle"></div>
     </div>
 
     <div class="card hidden" id="panelUsuarios">
@@ -793,7 +878,10 @@ window.agregar = async () => {
 window.avanzar = async id => {
   const d = datos.find(x => x.id === id); if (!d) return;
   const next = d.estado === 'Pendiente' ? 'En progreso' : d.estado === 'En progreso' ? 'Completada' : 'Pendiente';
-  const extra = next === 'Completada' ? { completado: serverTimestamp(), completadoPor: miNombre } : { completado: null, completadoPor: null };
+  let extra;
+  if (next === 'En progreso') extra = { tomadoPor: miNombre, tomado: serverTimestamp(), completado: null, completadoPor: null };
+  else if (next === 'Completada') extra = { completado: serverTimestamp(), completadoPor: miNombre, ...(d.tomadoPor ? {} : { tomadoPor: miNombre, tomado: serverTimestamp() }) };
+  else extra = { completado: null, completadoPor: null, tomadoPor: null, tomado: null, reabierto: Date.now() };
   try { await update(dbRef(db, 'relevos/' + id), { estado: next, ...extra }); } catch (e) { alert('Error: ' + (e.code || e.message)); }
 };
 window.editar = async id => {
@@ -845,12 +933,17 @@ window.descargar = async id => {
 
 // ---- Render
 function render() {
+  datos.forEach(aplicarEscalado);
   const v = datos.filter(d => !vencida(d)).sort((a, b) => ((a.estado === 'Completada') - (b.estado === 'Completada')) || ((orden[a.prior] ?? 9) - (orden[b.prior] ?? 9)));
   const primeraComp = v.findIndex(x => x.estado === 'Completada');
   const sepHtml = `<div class="sep">✅ Completadas (${v.filter(x => x.estado === 'Completada').length}) · pasan al historial al terminar el turno</div>`;
   $('sTotal').textContent = v.length;
   $('sCrit').textContent = v.filter(x => x.prior === 'CRÍTICA').length;
+  $('sAlta').textContent = v.filter(x => x.prior === 'ALTA').length;
+  $('sMedia').textContent = v.filter(x => x.prior === 'MEDIA').length;
+  $('sBaja').textContent = v.filter(x => x.prior === 'BAJA').length;
   $('sPend').textContent = v.filter(x => x.estado === 'Pendiente').length;
+  $('sProg').textContent = v.filter(x => x.estado === 'En progreso').length;
   $('sComp').textContent = v.filter(x => x.estado === 'Completada').length;
   $('vacio').style.display = v.length ? 'none' : 'block';
   $('lista').innerHTML = v.map((d, i) => {
@@ -876,9 +969,10 @@ function render() {
       : '';
     const gest = puedeGestionar();
     const priorSel = `<select title="Cambiar prioridad" onchange="cambiarPrior('${d.id}', this.value)">${Object.keys(orden).map(k => `<option${k === d.prior ? ' selected' : ''}>${k}</option>`).join('')}</select>`;
-    return (i === primeraComp ? sepHtml : '') + `<div class="item p-${clase} ${d.estado === 'Completada' ? 'done' : ''}"><span class="badge ${clase}">⚠ ${esc(d.prior)}</span><div class="txt"><b>${esc(d.texto)}</b>${refHtml}${fileHtml}${metaHtml}${obsHtml}</div><span class="estado">${esc(d.estado)}</span><div class="actions"><button onclick="avanzar('${d.id}')">${d.estado === 'Completada' ? '↩ Reabrir' : 'Avanzar →'}</button>${gest ? `${priorSel}<button title="Observación" onclick="observar('${d.id}')">💬</button><button onclick="editar('${d.id}')">✏️</button><button onclick="borrar('${d.id}')">🗑️</button>` : ''}</div></div>`;
+    return (i === primeraComp ? sepHtml : '') + `<div class="item p-${clase} ${d.estado === 'Completada' ? 'done' : ''}"><span class="badge ${clase}">⚠ ${esc(d.prior)}</span><div class="txt"><b>${esc(d.texto)}</b>${refHtml}${fileHtml}${metaHtml}${infoToma(d)}${obsHtml}</div><span class="estado">${esc(d.estado)}</span><div class="actions"><button onclick="avanzar('${d.id}')">${d.estado === 'Completada' ? '↩ Reabrir' : d.estado === 'Pendiente' ? '🙋 Tomar relevo' : '✔ Completar'}</button>${gest ? `${priorSel}<button title="Observación" onclick="observar('${d.id}')">💬</button><button onclick="editar('${d.id}')">✏️</button><button onclick="borrar('${d.id}')">🗑️</button>` : ''}</div></div>`;
   }).join('');
   renderChecklist();
+  renderDetalle();
 }
 function renderChecklist() {
   const v = checklist.filter(d => !vencidaCk(d)).sort((a, b) => (a.creado || 0) - (b.creado || 0));
@@ -893,6 +987,72 @@ function renderChecklist() {
   });
   $('listaChecklist').innerHTML = html;
 }
+
+// ---- Relevo no tomado: al terminar el turno que lo recibe pasa solo a CRÍTICA (prioridad para el turno siguiente)
+// Plazo = fin del turno siguiente al que se registró. Si quieres que sea al terminar el MISMO turno donde se registró,
+// cambia plazoToma por: finTurno(baseToma(d))
+const baseToma = d => d.reabierto || d.creado || 0;
+const plazoToma = d => finTurno(finTurno(baseToma(d)));
+function aplicarEscalado(d) {
+  if (d.estado !== 'Pendiente' || d.escalado || d.prior === 'CRÍTICA' || !(d.prior in orden)) return;
+  if (baseToma(d) && Date.now() >= plazoToma(d)) { d._priorOrig = d.prior; d.prior = 'CRÍTICA'; d._esc = true; }
+}
+const escalando = new Set();
+async function escalarSinTomar() {
+  if (!datosListos) return;
+  const pend = datos.filter(d => d._esc && !d.escalado && !escalando.has(d.id));
+  if (!pend.length) return;
+  const cambios = {};
+  pend.forEach(d => {
+    escalando.add(d.id);
+    const b = 'relevos/' + d.id + '/';
+    cambios[b + 'prior'] = 'CRÍTICA'; cambios[b + 'priorOriginal'] = d._priorOrig || null;
+    cambios[b + 'escalado'] = true; cambios[b + 'escaladoEn'] = plazoToma(d);
+  });
+  try { await update(dbRef(db), cambios); pend.forEach(d => escalando.delete(d.id)); }
+  catch (e) { console.warn('No se pudo guardar el paso a crítica', e); setTimeout(() => pend.forEach(d => escalando.delete(d.id)), 60000); }
+}
+const fmtF = ms => ms ? new Date(ms).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '';
+function infoToma(d) {
+  const gris = 'class="ref" style="color:#64748b"';
+  let h = '';
+  if (d.escalado || d._esc) { const o = d.priorOriginal || d._priorOrig; h += `<span class="ref esc">🔺 Pasó a CRÍTICA automáticamente: nadie lo tomó al terminar el turno${o ? ' (antes: ' + esc(o) + ')' : ''}</span>`; }
+  if (d.tomadoPor) h += `<span ${gris}>🙋 Tomado por <strong>${esc(d.tomadoPor)}</strong>${d.tomado ? ' · ' + esc(fmtF(d.tomado)) : ''}</span>`;
+  else if (d.estado === 'Pendiente') h += `<span ${gris}>⏳ Nadie lo ha tomado todavía${d.prior !== 'CRÍTICA' && baseToma(d) ? ' · si no se toma, pasa a CRÍTICA el ' + esc(fmtF(plazoToma(d))) : ''}</span>`;
+  else h += `<span ${gris}>🙋 Sin registro de quién lo tomó</span>`;
+  if (d.estado === 'Completada' && d.completadoPor) h += `<span ${gris}>✅ Completado por <strong>${esc(d.completadoPor)}</strong>${d.completado ? ' · ' + esc(fmtF(d.completado)) : ''}</span>`;
+  return h;
+}
+
+// ---- Ver detalle del resumen (por categoría, con quién tomó cada relevo)
+const FILTROS = [
+  ['TOTAL', 'Total', () => true],
+  ['Pendiente', 'Pendientes', d => d.estado === 'Pendiente'],
+  ['En progreso', 'En progreso', d => d.estado === 'En progreso'],
+  ['Completada', 'Completadas', d => d.estado === 'Completada'],
+  ['CRÍTICA', 'Críticas', d => d.prior === 'CRÍTICA'],
+  ['ALTA', 'Altas', d => d.prior === 'ALTA'],
+  ['MEDIA', 'Medias', d => d.prior === 'MEDIA'],
+  ['BAJA', 'Bajas', d => d.prior === 'BAJA']
+];
+let detFiltro = 'TOTAL';
+window.verDetalle = f => { detFiltro = f; const pn = $('panelDetalle'); pn.classList.remove('hidden'); pn.scrollTop = 0; renderDetalle(); };
+window.cerrarDetalle = () => $('panelDetalle').classList.add('hidden');
+function renderDetalle() {
+  const pn = $('panelDetalle'); if (!pn || pn.classList.contains('hidden')) return;
+  const v = datos.filter(d => !vencida(d));
+  $('dChips').innerHTML = FILTROS.map(([k, n, fn]) => `<button type="button" class="dchip${k === detFiltro ? ' on' : ''}" onclick="verDetalleChip('${k}')">${n}<small>${v.filter(fn).length}</small></button>`).join('');
+  const f = FILTROS.find(x => x[0] === detFiltro) || FILTROS[0];
+  $('dTitulo').textContent = 'Detalle · ' + f[1];
+  const lista = v.filter(f[2]).sort((a, b) => ((a.estado === 'Completada') - (b.estado === 'Completada')) || ((orden[a.prior] ?? 9) - (orden[b.prior] ?? 9)));
+  $('listaDetalle').innerHTML = lista.length ? lista.map(d => {
+    const clase = (d.prior || '').replace('Í', 'I');
+    const meta = (d.autor || d.creado) ? `<span class="ref" style="color:#64748b">👤 Agregado por <strong>${esc(d.autor || '—')}</strong>${d.creado ? ' · ' + esc(fmtF(d.creado)) : ''}</span>` : '';
+    return `<div class="item p-${clase} ${d.estado === 'Completada' ? 'done' : ''}"><span class="badge ${clase}">⚠ ${esc(d.prior)}</span><div class="txt"><b>${esc(d.texto)}</b>${meta}${infoToma(d)}</div><span class="estado">${esc(d.estado)}</span><div class="actions">${d.estado === 'Pendiente' ? `<button onclick="avanzar('${d.id}')">🙋 Tomar relevo</button>` : ''}</div></div>`;
+  }).join('') : '<p style="color:#94a3b8;padding:20px;margin:0;text-align:center">No hay relevos en esta categoría.</p>';
+}
+window.verDetalleChip = k => { detFiltro = k; renderDetalle(); };
+$('btnCerrarD').addEventListener('click', cerrarDetalle);
 
 // ---- Login (Firebase Authentication, correo/contraseña)
 // El "usuario" se convierte en correo interno: ahuingor -> ahuingor@reversa.app
@@ -958,7 +1118,7 @@ document.getElementById('btnTrino').addEventListener('click', window.avisarTrino
 // ---- Resumen desplegable (recuerda si lo dejaste oculto)
 (function () {
   const sec = $('statsSec'), btn = $('btnStats'), mini = $('statsMini');
-  const ids = [['sTotal', 'Total'], ['sCrit', 'Críticas'], ['sPend', 'Pendientes'], ['sComp', 'Completadas']];
+  const ids = [['sTotal', 'Total'], ['sCrit', 'Críticas'], ['sAlta', 'Altas'], ['sMedia', 'Medias'], ['sBaja', 'Bajas'], ['sPend', 'Pendientes'], ['sProg', 'En progreso'], ['sComp', 'Completadas']];
   const resumir = () => { mini.textContent = ids.map(([i, n]) => n + ' ' + $(i).textContent).join(' · '); };
   const aplicar = oculto => {
     sec.classList.toggle('collapsed', oculto);
@@ -977,6 +1137,21 @@ document.getElementById('btnTrino').addEventListener('click', window.avisarTrino
   aplicar(g);
 })();
 
+// ---- Resumen: ceros atenuados y barra de avance
+(function () {
+  const ids = ['sTotal', 'sPend', 'sProg', 'sComp', 'sCrit', 'sAlta', 'sMedia', 'sBaja'];
+  const num = i => parseInt($(i).textContent, 10) || 0;
+  const actualizar = () => {
+    ids.forEach(i => { $(i).closest('.kpi').dataset.zero = num(i) === 0 ? '1' : '0'; });
+    const t = num('sTotal'), c = num('sComp'), p = t ? Math.round(c * 100 / t) : 0;
+    $('kpiProgTxt').textContent = t ? c + ' de ' + t + ' completadas' : 'Sin tareas registradas';
+    $('kpiProgPct').textContent = p + ' %';
+    $('kpiProgBar').style.width = p + '%';
+  };
+  ids.forEach(i => new MutationObserver(actualizar).observe($(i), { childList: true, characterData: true, subtree: true }));
+  actualizar();
+})();
+
 // ---- Menú lateral
 const menuBtn = $('btnMenu'), drawer = $('drawer'), overlay = $('drawerOverlay');
 function abrirMenu() {
@@ -990,7 +1165,7 @@ function cerrarMenu() {
 menuBtn.addEventListener('click', abrirMenu);
 $('btnCerrarMenu').addEventListener('click', cerrarMenu);
 overlay.addEventListener('click', cerrarMenu);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { cerrarMenu(); $('panelHistorial').classList.add('hidden'); $('panelUsuarios').classList.add('hidden'); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { cerrarMenu(); $('panelHistorial').classList.add('hidden'); $('panelDetalle').classList.add('hidden'); $('panelUsuarios').classList.add('hidden'); } });
 // al usar una opción del menú, se cierra solo (la alerta de turno queda abierta para mostrar su mensaje)
 drawer.querySelectorAll('.drawer-item').forEach(b => b.addEventListener('click', cerrarMenu));
 
@@ -1006,7 +1181,7 @@ const CATEGORIAS = ['Operario', 'Asistente', 'Administrativo'];
 const limpiar = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 $('btnUsuarios').addEventListener('click', () => {
-  $('panelHistorial').classList.add('hidden');
+  $('panelHistorial').classList.add('hidden'); $('panelDetalle').classList.add('hidden');
   const pu = $('panelUsuarios'); pu.classList.remove('hidden'); pu.scrollTop = 0;
 });
 $('btnCerrarU').addEventListener('click', () => $('panelUsuarios').classList.add('hidden'));
@@ -1029,7 +1204,13 @@ $('btnCrearUser').addEventListener('click', async () => {
   const btn = $('btnCrearUser'); btn.disabled = true; m.style.color = '#64748b'; m.textContent = 'Creando…';
   try {
     const cred = await createUserWithEmailAndPassword(secAuth, usuario + DOMINIO, dni);
-    await update(dbRef(db), { ['usuarios/' + cred.user.uid]: { nombres, apellidos, usuario, dni, categoria, activo: true, creado: serverTimestamp() } });
+    try {
+      await update(dbRef(db), { ['usuarios/' + cred.user.uid]: { nombres, apellidos, usuario, dni, categoria, activo: true, creado: serverTimestamp(), creadoPor: miNombre } });
+    } catch (e2) {
+      // si no se pudo guardar el perfil, no dejar la cuenta de acceso huérfana
+      try { await deleteUser(cred.user); } catch (_) {}
+      throw e2;
+    }
     await signOut(secAuth);
     ['uNom', 'uApe', 'uUser', 'uDni'].forEach(i => $(i).value = '');
     delete $('uUser').dataset.manual;
@@ -1039,9 +1220,11 @@ $('btnCrearUser').addEventListener('click', async () => {
       'auth/email-already-in-use': 'Ese usuario ya existe, elige otro',
       'auth/invalid-email': 'Usuario no válido',
       'auth/weak-password': 'La contraseña (DNI) es muy corta',
-      'auth/operation-not-allowed': 'Activa "Correo/contraseña" en Authentication'
+      'auth/operation-not-allowed': 'Activa "Correo/contraseña" en Authentication',
+      'PERMISSION_DENIED': 'Tu categoría no tiene permiso en la base de datos para crear usuarios (revisa las reglas de Firebase)'
     };
-    m.style.color = '#dc2626'; m.textContent = t[e.code] || ('Error: ' + (e.code || e.message));
+    m.style.color = '#dc2626'; m.textContent = t[e.code] || (/permission_denied/i.test(e.code + ' ' + e.message) ? t.PERMISSION_DENIED : ('Error: ' + (e.code || e.message)));
+    try { await signOut(secAuth); } catch (_) {}
   } finally { btn.disabled = false; }
 });
 
@@ -1151,8 +1334,8 @@ window.restaurar = async id => {
   if (!puedeGestionar()) return alert('Tu categoría no permite restaurar actividades');
   const h = historial.find(x => x.id === id); if (!h) return;
   if (!confirm('¿Restaurar esta actividad? Volverá a la lista como Pendiente.')) return;
-  const { id: _id, archivadoEn, turno, completado, completadoPor, ...resto } = h;
-  resto.estado = 'Pendiente';
+  const { id: _id, archivadoEn, turno, completado, completadoPor, tomadoPor, tomado, ...resto } = h;
+  resto.estado = 'Pendiente'; resto.reabierto = Date.now();
   try { await update(dbRef(db), { ['relevos/' + id]: resto, ['historial/' + id]: null }); }
   catch (e) { alert('Error: ' + (e.code || e.message)); }
 };
@@ -1254,7 +1437,7 @@ onAuthStateChanged(auth, async user => {
   historial = [];
   if (!user) {
     pararEscuchaPresencia(); presRef = null; $('pres').classList.add('hidden');
-    $('panelHistorial').classList.add('hidden');
+    $('panelHistorial').classList.add('hidden'); $('panelDetalle').classList.add('hidden');
     $('splash').classList.add('hidden');
     try { sessionStorage.removeItem(SPLASH_KEY); } catch (_) {}
     datos = []; checklist = []; render();
@@ -1285,8 +1468,11 @@ onAuthStateChanged(auth, async user => {
   $('app').classList.remove('hidden');
   $('who').textContent = etiqueta;
   iniciarPresencia(user);
-  $('btnUsuarios').classList.toggle('hidden', !esAdmin);
-  if (esAdmin) escucharUsuarios();
+  // Admin y Administrativo: mismo nivel de acceso (crear, ver, modificar y eliminar usuarios).
+  const puedeCrear = esAdmin || miRol === 'Administrativo';
+  $('btnUsuarios').classList.toggle('hidden', !puedeCrear);
+  if (puedeCrear) escucharUsuarios();
+  else $('listaUsuarios').innerHTML = '';
   setConn('Conectando…');
   unsub = onValue(dbRef(db, 'relevos'), snap => {
     const v = snap.val() || {};
@@ -1297,6 +1483,7 @@ onAuthStateChanged(auth, async user => {
     setConn('Sincronizado', 'ok');
     render();
     archivarVencidas();
+    escalarSinTomar();
   }, err => {
     console.error(err);
     datosListos = true;
@@ -1305,7 +1492,7 @@ onAuthStateChanged(auth, async user => {
   mostrarSplash(user.uid);
 });
 // Cada minuto: oculta lo vencido y (admin/administrativos) lo archiva en la nube
-setInterval(() => { if (auth.currentUser) { render(); archivarVencidas(); } }, 60000);
+setInterval(() => { if (auth.currentUser) { render(); archivarVencidas(); escalarSinTomar(); } }, 60000);
 render();
 </script>
 <script>
