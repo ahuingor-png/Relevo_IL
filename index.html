@@ -720,10 +720,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const MAX_MB = 3; // tamaño máximo por archivo adjunto
-let miRol = '', miNombre = '';
+let miRol = '', miNombre = '', miLlave = false, esAdminReal = false;
 // Admin y Administrativo: editan, borran, cambian prioridad y ponen observaciones.
 // Operario y Asistente: ven los relevos, agregan nuevos y avanzan su estado.
-const puedeGestionar = () => miRol === 'admin' || miRol === 'Administrativo';
+// Llave admin: el admin puede darle a un Asistente el mismo nivel que Administrativo.
+const puedeGestionar = () => miRol === 'admin' || miRol === 'Administrativo' || miLlave;
 
 let datos = [], checklist = [], historial = [], unsubH = null;
 let pendingFile = null;
@@ -1280,7 +1281,7 @@ function escucharUsuarios() {
   }, err => { $('listaUsuarios').innerHTML = '<p style="color:#dc2626">Error: ' + esc(err.code || err.message) + '</p>'; });
 }
 function renderUsuarios() {
-  $('listaUsuarios').innerHTML = usuarios.length ? usuarios.map(u => `<div class="item"><div class="txt"><b>${esc(u.apellidos)}, ${esc(u.nombres)}</b><span class="ref">Usuario: ${esc(u.usuario)} · DNI: ${esc(u.dni)}</span></div><span class="estado">${esc(u.categoria)}</span><span class="badge ${u.activo ? 'BAJA' : 'CRITICA'}">${u.activo ? 'Activo' : 'Sin acceso'}</span><div class="actions"><button onclick="toggleAcceso('${u.uid}')">${u.activo ? '🚫 Quitar acceso' : '✅ Dar acceso'}</button><button onclick="cambiarCat('${u.uid}')">🔁 Categoría</button><button onclick="eliminarUsuario('${u.uid}')" style="color:#f87171;border-color:#7f1d1d">🗑️ Eliminar</button></div></div>`).join('')
+  $('listaUsuarios').innerHTML = usuarios.length ? usuarios.map(u => `<div class="item"><div class="txt"><b>${esc(u.apellidos)}, ${esc(u.nombres)}</b><span class="ref">Usuario: ${esc(u.usuario)} · DNI: ${esc(u.dni)}</span></div><span class="estado">${esc(u.categoria)}</span>${u.categoria === 'Asistente' && u.llaveAdmin ? '<span class="estado">🔑 Llave admin</span>' : ''}<span class="badge ${u.activo ? 'BAJA' : 'CRITICA'}">${u.activo ? 'Activo' : 'Sin acceso'}</span><div class="actions"><button onclick="toggleAcceso('${u.uid}')">${u.activo ? '🚫 Quitar acceso' : '✅ Dar acceso'}</button><button onclick="cambiarCat('${u.uid}')">🔁 Categoría</button>${esAdminReal && u.categoria === 'Asistente' ? `<button onclick="toggleLlave('${u.uid}')">🔑 ${u.llaveAdmin ? 'Quitar' : 'Dar'} llave admin</button>` : ''}<button onclick="eliminarUsuario('${u.uid}')" style="color:#f87171;border-color:#7f1d1d">🗑️ Eliminar</button></div></div>`).join('')
     : '<p style="color:#94a3b8">Aún no hay usuarios creados.</p>';
 }
 window.toggleAcceso = async uid => {
@@ -1300,11 +1301,17 @@ window.eliminarUsuario = async uid => {
   } catch (_) { try { await signOut(secAuth); } catch (__) {} }
   const m = $('uMsg'); m.style.color = '#16a34a'; m.textContent = '🗑️ Usuario eliminado: ' + u.usuario;
 };
+window.toggleLlave = async uid => {
+  const u = usuarios.find(x => x.uid === uid); if (!u || !esAdminReal || u.categoria !== 'Asistente') return;
+  const dar = !u.llaveAdmin;
+  if (!confirm((dar ? '¿Dar llave admin a ' : '¿Quitar la llave admin a ') + u.nombres + ' ' + u.apellidos + '?\n\n' + (dar ? 'Podrá editar/eliminar relevos y gestionar usuarios, igual que un Administrativo.' : 'Volverá a tener los permisos normales de Asistente.') + '\nSe aplica la próxima vez que ingrese.')) return;
+  try { await update(dbRef(db, 'usuarios/' + uid), { llaveAdmin: dar }); } catch (e) { alert('Error: ' + (e.code || e.message)); }
+};
 window.cambiarCat = async uid => {
   const u = usuarios.find(x => x.uid === uid); if (!u) return;
   const nueva = CATEGORIAS[(CATEGORIAS.indexOf(u.categoria) + 1) % CATEGORIAS.length];
   if (!confirm('¿Cambiar a ' + u.nombres + ' ' + u.apellidos + ' a la categoría "' + nueva + '"?')) return;
-  try { await update(dbRef(db, 'usuarios/' + uid), { categoria: nueva }); } catch (e) { alert('Error: ' + (e.code || e.message)); }
+  try { await update(dbRef(db, 'usuarios/' + uid), { categoria: nueva, ...(nueva !== 'Asistente' && u.llaveAdmin ? { llaveAdmin: false } : {}) }); } catch (e) { alert('Error: ' + (e.code || e.message)); }
 };
 
 // ---- Turnos y archivado: día 08:00–20:00 · noche 20:00–08:00 (hora del dispositivo)
@@ -1496,6 +1503,7 @@ onAuthStateChanged(auth, async user => {
   if (esAdmin) {
     etiqueta = 'Admin · ' + user.email.replace(DOMINIO, '');
     miRol = 'admin'; miNombre = 'Admin ' + user.email.replace(DOMINIO, '');
+    miLlave = false; esAdminReal = true;
   } else {
     // Los demás necesitan un perfil activo creado por el admin
     let perfil = null;
@@ -1505,15 +1513,17 @@ onAuthStateChanged(auth, async user => {
       await signOut(auth);
       return;
     }
-    etiqueta = perfil.nombres + ' ' + perfil.apellidos + ' · ' + perfil.categoria;
     miRol = perfil.categoria; miNombre = perfil.nombres + ' ' + perfil.apellidos;
+    esAdminReal = false;
+    miLlave = perfil.categoria === 'Asistente' && perfil.llaveAdmin === true;
+    etiqueta = perfil.nombres + ' ' + perfil.apellidos + ' · ' + perfil.categoria + (miLlave ? ' 🔑' : '');
   }
   $('login').style.display = 'none';
   $('app').classList.remove('hidden');
   $('who').textContent = etiqueta;
   iniciarPresencia(user);
   // Admin y Administrativo: mismo nivel de acceso (crear, ver, modificar y eliminar usuarios).
-  const puedeCrear = esAdmin || miRol === 'Administrativo';
+  const puedeCrear = esAdmin || miRol === 'Administrativo' || miLlave;
   $('btnUsuarios').classList.toggle('hidden', !puedeCrear);
   if (puedeCrear) escucharUsuarios();
   else $('listaUsuarios').innerHTML = '';
