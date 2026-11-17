@@ -1089,12 +1089,56 @@ $('btnSalir').addEventListener('click', async () => { await detenerPresencia(); 
 
 // ---- Alerta Telegram: trino cerrado / relevo en envío
 const TELEGRAM_TOKEN = "9029769385:AAGqucqxSsMZdUDuBvO-WFfJymYG5IT4rdk";
-const TELEGRAM_CHAT_ID = "1798636140";
+// Tu chat personal (opcional; déjalo "" si no quieres recibirlo tú).
+const TELEGRAM_CHAT_PERSONAL = "1798636140";
+// ID del GRUPO (número NEGATIVO, ej. "-1001234567890"). Pégalo aquí entre comillas.
+const TELEGRAM_GRUPO_ID = "-5264188837";
+const TELEGRAM_CHAT_IDS = [TELEGRAM_CHAT_PERSONAL, TELEGRAM_GRUPO_ID].map(c => String(c).trim()).filter(Boolean);
 let ultimoAvisoTrino = 0;
+
+const tgApi = (metodo, cuerpo) => fetch('https://api.telegram.org/bot' + String(TELEGRAM_TOKEN).trim() + '/' + metodo, {
+  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo || {})
+}).then(r => r.json());
+
+const tgErrorTexto = (r) => {
+  const c = r && r.error_code, d = (r && r.description) || 'error';
+  if (c === 404) return 'token inválido (404). Cópialo de nuevo desde @BotFather';
+  if (c === 401) return 'token revocado o incorrecto (401)';
+  if (c === 403) return 'el bot no tiene permiso: fue expulsado del grupo o no está en él';
+  if (c === 400 && /chat not found/i.test(d)) return 'chat no encontrado: el bot no está en ese grupo o el ID es incorrecto';
+  return d;
+};
+
+// Envía a un chat; si el grupo fue convertido a supergrupo, reintenta con el ID nuevo.
+const tgEnviar = async (id, texto) => {
+  let r = await tgApi('sendMessage', { chat_id: id, text: texto });
+  if (!r.ok && r.parameters && r.parameters.migrate_to_chat_id) {
+    const nuevo = String(r.parameters.migrate_to_chat_id);
+    r = await tgApi('sendMessage', { chat_id: nuevo, text: texto });
+    if (r.ok) console.warn('El grupo cambió de ID. Actualiza TELEGRAM_GRUPO_ID a: ' + nuevo);
+  }
+  return r;
+};
+
+// Ayuda: escribe un mensaje en el grupo y ejecuta  telegramDetectarChats()  en la consola (F12)
+// para ver los IDs de los chats/grupos donde está el bot.
+window.telegramDetectarChats = async () => {
+  const r = await tgApi('getUpdates');
+  if (!r.ok) { console.error('Telegram:', tgErrorTexto(r)); return r; }
+  const vistos = {};
+  (r.result || []).forEach(u => {
+    const m = u.message || u.channel_post || u.my_chat_member || u.edited_message;
+    const c = m && m.chat; if (c) vistos[c.id] = (c.title || c.username || c.first_name || '') + ' [' + c.type + ']';
+  });
+  console.table(vistos);
+  return vistos;
+};
+
 window.avisarTrino = async () => {
   const m = document.getElementById('trinoMsg'), b = document.getElementById('btnTrino');
   const decir = (t, ok) => { m.textContent = t; m.style.color = ok ? '#16a34a' : '#dc2626'; };
-  if (TELEGRAM_TOKEN.startsWith('PEGA') || TELEGRAM_CHAT_ID.startsWith('PEGA')) { decir('⚠ Falta configurar el token y el chat_id de Telegram en el código.', false); return; }
+  if (!TELEGRAM_TOKEN || String(TELEGRAM_TOKEN).startsWith('PEGA') || !TELEGRAM_CHAT_IDS.length) { decir('⚠ Falta configurar el token y el chat_id de Telegram en el código.', false); return; }
+  if (!TELEGRAM_GRUPO_ID) console.warn('TELEGRAM_GRUPO_ID está vacío: la alerta solo irá al chat personal.');
   if (Date.now() - ultimoAvisoTrino < 60000) { decir('Ya enviaste la alerta hace menos de 1 minuto.', false); return; }
   if (!confirm('¿Enviar alerta: "Turno cerrado, relevo en envío"?')) return;
   const ahora = new Date(), h = ahora.getHours();
@@ -1103,13 +1147,13 @@ window.avisarTrino = async () => {
   const texto = '🚚 TURNO CERRADO\n📤 El relevo se está enviando.\n🕐 Turno: ' + turno + '\n👤 Enviado por: ' + quien + '\n📅 ' + ahora.toLocaleString('es-PE');
   b.disabled = true; decir('Enviando…', true);
   try {
-    const r = await fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: texto })
-    });
-    const d = await r.json();
-    if (d.ok) { ultimoAvisoTrino = Date.now(); decir('✅ Alerta enviada a Telegram.', true); }
-    else decir('❌ Telegram respondió: ' + (d.description || 'error'), false);
+    const envios = await Promise.allSettled(TELEGRAM_CHAT_IDS.map(id => tgEnviar(id, texto)));
+    const ok = envios.filter(e => e.status === 'fulfilled' && e.value.ok).length;
+    const fallos = envios.map((e, k) => e.status === 'fulfilled' ? (e.value.ok ? null : TELEGRAM_CHAT_IDS[k] + ': ' + tgErrorTexto(e.value)) : TELEGRAM_CHAT_IDS[k] + ': sin conexión').filter(Boolean);
+    if (ok) ultimoAvisoTrino = Date.now();
+    if (ok && !fallos.length) decir('✅ Alerta enviada a Telegram (' + ok + (ok > 1 ? ' destinos' : ' destino') + ').', true);
+    else if (ok) decir('⚠ Enviada a ' + ok + ' de ' + TELEGRAM_CHAT_IDS.length + '. Falló: ' + fallos.join(' | '), false);
+    else decir('❌ Telegram respondió: ' + fallos.join(' | '), false);
   } catch (e) { decir('❌ No se pudo enviar (revisa tu conexión).', false); }
   b.disabled = false;
 };
