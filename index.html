@@ -488,6 +488,59 @@ textarea{min-height:96px}
   padding-left:clamp(16px,2.5vw,56px);
   padding-right:clamp(16px,2.5vw,56px);
 }
+
+/* ---------- v5: vista principal compacta (laptop) + conectados ---------- */
+.topbar-in,.container{max-width:1560px;margin-left:auto;margin-right:auto}
+.container{padding-top:16px}
+.stats{margin-bottom:14px}
+.kpi-row{grid-template-columns:92px repeat(4,minmax(0,1fr))}
+.kpi-title{padding:0 14px}
+.kpi{padding:9px 34px 9px 14px;gap:4px}
+.kpi-n{font-size:22px}
+.kpi-l{font-size:12.5px}
+.kpi-prog{padding:8px 14px}
+.cols{gap:16px}
+.list-head{padding:12px 16px}
+/* Tarea: fila superior (prioridad · estado · acciones) y el texto debajo, a todo el ancho */
+#lista .item{display:grid;grid-template-columns:auto auto minmax(0,1fr);grid-template-areas:"badge estado actions" "txt txt txt";gap:8px 10px;align-items:center;padding:11px 16px;border-left-width:4px}
+#lista .item>.badge{grid-area:badge}
+#lista .item>.estado{grid-area:estado}
+#lista .item>.actions{grid-area:actions;justify-self:end;gap:5px}
+#lista .item>.txt{grid-area:txt;flex:none}
+#lista .item>.txt b,#listaChecklist .item>.txt b{display:block;font-size:14.5px;line-height:1.45;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere}
+#lista .item .actions button,#lista .item .actions select{padding:5px 9px;font-size:12.5px}
+#lista .item:not(.done) .actions button:first-child{background:var(--navy);border-color:var(--navy);color:#fff}
+#lista .item:not(.done) .actions button:first-child:hover{filter:brightness(1.15)}
+#lista .ref,#listaChecklist .ref{font-size:12px;margin-top:4px}
+#lista .filebox,#lista .obs{padding:7px 10px;font-size:12.5px;margin-top:6px}
+.item.ck{padding:9px 16px}
+#listaChecklist .item>.txt b{font-size:14px}
+@media(min-width:1500px){#lista .item,.item.ck{padding:11px 18px}}
+@media(max-width:600px){#lista .item{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"badge estado" "actions actions" "txt txt"}#lista .item>.actions{justify-self:stretch}}
+.modal-lite{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,10,25,.6)}
+.modal-lite.hidden{display:none}
+.modal-lite .card{width:100%;max-width:480px;max-height:calc(100vh - 32px);overflow:auto;margin:0;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.cu{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.cu:last-child{border-bottom:0}
+.cu-dot{flex:none;width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.22)}
+.cu.off{opacity:.6}.cu.off .cu-dot{background:#94a3b8;box-shadow:none}
+.cu-t b{display:block;font-size:14.5px}.cu-t em{font-style:normal;color:var(--muted);font-weight:500}
+.cu-t small{color:var(--muted);font-size:12.5px}
+.cu-h{margin:16px 0 2px;font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.cnt{float:right;min-width:22px;text-align:center;font-size:12px;font-weight:800;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.14)}
+.cnt.on{background:#16a34a;color:#fff}
+.pres{cursor:pointer}
+/* ---------- v5.1: corrige huecos en celular y compacta Usuarios ---------- */
+@media(max-width:600px){
+  .item>.txt{flex:none!important}
+  .item{gap:8px}
+}
+#listaUsuarios .item{flex-wrap:wrap;align-items:center;gap:8px 10px;padding:12px 14px}
+#listaUsuarios .item>.txt{flex:1 1 100%!important;order:-1}
+#listaUsuarios .item>.txt b{font-size:14.5px;display:block}
+#listaUsuarios .item .actions{flex:1 1 100%;gap:6px}
+#listaUsuarios .item .actions button{padding:6px 10px;font-size:12.5px}
+@media(max-width:600px){#listaUsuarios .item{flex-direction:row}}
 </style></head>
 <body>
 <div id="login">
@@ -541,6 +594,7 @@ textarea{min-height:96px}
   <div class="drawer-head"><b>☰ Menú</b><button type="button" class="drawer-x" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button></div>
   <div class="drawer-body">
    <button type="button" class="drawer-item" id="btnHistorial">📜 Historial</button>
+   <button type="button" class="drawer-item" id="btnConectados">🟢 Conectados <span class="cnt" id="cntConectados">0</span></button>
    <button type="button" class="drawer-item hidden" id="btnUsuarios">👥 Usuarios</button>
    <button type="button" class="drawer-item hidden" id="btnInstalar">📲 Instalar app</button>
    <button type="button" class="drawer-item" id="btnTema" aria-label="Cambiar entre modo claro y oscuro"><span class="t-osc">🌙 Modo oscuro</span><span class="t-cla">☀️ Modo claro</span></button>
@@ -555,6 +609,14 @@ textarea{min-height:96px}
    <button type="button" class="drawer-item danger" id="btnSalir">🚪 Cerrar sesión</button>
   </div>
  </nav>
+
+ <div class="modal-lite hidden" id="panelConectados" role="dialog" aria-modal="true" aria-label="Usuarios conectados">
+  <div class="card">
+   <div class="header-form"><h3>🟢 Usuarios conectados</h3><button type="button" class="btn-top-hide" id="btnCerrarC">✕ Cerrar</button></div>
+   <p class="tip" id="cSub"></p>
+   <div id="listaConectados"></div>
+  </div>
+ </div>
 
  <main class="container">
   <div class="stats-bar">
@@ -620,7 +682,7 @@ textarea{min-height:96px}
        </div>
 
        <label for="texto">Detalle del relevo</label>
-       <textarea id="texto" placeholder="Escribe aquí el relevo, o elige una opción predeterminada. Puedes pegar varias filas desde Excel: cada línea será un relevo."></textarea>
+       <textarea id="texto" placeholder="Escribe aquí el relevo, o elige una opción predeterminada. Todo lo que escribas se guardará como una sola tarea."></textarea>
 
        <button type="button" class="toggle" id="btnAdjuntar" onclick="toggleAdjuntar()">📎 Adjuntar archivo &nbsp;▸ <span style="font-weight:400;color:#64748b">Mostrar / Ocultar</span></button>
       <div id="zonaAdjuntar" class="hidden">
@@ -643,7 +705,7 @@ textarea{min-height:96px}
 
       <div id="paneReal" class="hidden">
        <label for="textoReal">Checklist de salida</label>
-       <textarea id="textoReal" placeholder="Escribe aquí lo que se realizó durante tu turno, antes de enviar el relevo. Cada línea será un ítem del checklist."></textarea>
+       <textarea id="textoReal" placeholder="Escribe aquí lo que se realizó durante tu turno, antes de enviar el relevo. Todo lo que escribas se guardará como un solo ítem del checklist."></textarea>
        <p class="tip">Es solo informativo: lo que ya se hizo durante el turno. No forma parte de los relevos pendientes, no se tacha y lo verá también el turno que recibe. Pasa al historial al terminar el turno siguiente.</p>
        <button type="button" class="btn" id="btnRealizadas" style="width:100%;height:44px">📋 Registrar checklist de salida</button>
        <p id="msgReal" style="color:#16a34a"></p>
@@ -747,7 +809,7 @@ function leerArchivo(f) {
 
 // ---- Actividades realizadas (se guardan ya completadas)
 $('btnRealizadas').addEventListener('click', async () => {
-  const lineas = $('textoReal').value.split(/\n/).map(x => x.split('\t')[0].trim()).filter(Boolean);
+  const lineas = [$('textoReal').value.replace(/\t+/g, ' · ').replace(/[ ]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim()].filter(Boolean);
   if (!lineas.length) return alert('Escribe los ítems del checklist de salida');
   const btn = $('btnRealizadas'), msg = $('msgReal'); btn.disabled = true;
   try {
@@ -761,7 +823,7 @@ $('btnRealizadas').addEventListener('click', async () => {
     await update(dbRef(db), cambios);
     $('textoReal').value = '';
     msg.style.color = '#16a34a';
-    msg.textContent = 'Se registraron ' + lineas.length + ' ítem(s) en el checklist de salida';
+    msg.textContent = 'Ítem registrado en el checklist de salida';
     $('textoReal').focus();
   } catch (e) {
     console.error(e);
@@ -833,7 +895,8 @@ window.agregar = async () => {
   const t = $('texto').value.trim();
   if (!t) return alert('Escribe el relevo');
   const ref = $('ref').value.trim(), p = $('prior').value;
-  const lineas = t.split(/\n/).map(s => s.split('\t')[0].trim()).filter(Boolean);
+  // Todo lo escrito (aunque tenga varias líneas) se guarda como UNA sola tarea
+  const lineas = [t.replace(/\t+/g, ' · ').replace(/[ ]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim()];
   const btn = $('btnAgregar'); btn.disabled = true;
   try {
     let archivo = null, dataUrl = null;
@@ -865,7 +928,7 @@ window.agregar = async () => {
     $('zonaAdjuntar').classList.add('hidden');
     $('btnAdjuntar').innerHTML = '📎 Adjuntar archivo &nbsp;▸ <span style="font-weight:400;color:#64748b">Mostrar / Ocultar</span>';
     $('msg').style.color = '#16a34a';
-    $('msg').textContent = 'Se agregaron ' + lineas.length + ' relevo(s)' + (archivo ? ' con archivo' : '');
+    $('msg').textContent = 'Relevo agregado' + (archivo ? ' con archivo' : '');
     $('texto').focus();
   } catch (e) {
     console.error(e);
@@ -1277,7 +1340,7 @@ function escucharUsuarios() {
   unsubU = onValue(dbRef(db, 'usuarios'), snap => {
     const v = snap.val() || {};
     usuarios = Object.entries(v).map(([uid, u]) => ({ uid, ...u })).sort((a, b) => (a.apellidos || '').localeCompare(b.apellidos || ''));
-    renderUsuarios();
+    renderUsuarios(); renderConectados();
   }, err => { $('listaUsuarios').innerHTML = '<p style="color:#dc2626">Error: ' + esc(err.code || err.message) + '</p>'; });
 }
 function renderUsuarios() {
@@ -1313,6 +1376,35 @@ window.cambiarCat = async uid => {
   if (!confirm('¿Cambiar a ' + u.nombres + ' ' + u.apellidos + ' a la categoría "' + nueva + '"?')) return;
   try { await update(dbRef(db, 'usuarios/' + uid), { categoria: nueva, ...(nueva !== 'Asistente' && u.llaveAdmin ? { llaveAdmin: false } : {}) }); } catch (e) { alert('Error: ' + (e.code || e.message)); }
 };
+
+
+// ---- Vista de usuarios conectados (menú ☰ → Conectados)
+function renderConectados() {
+  const cnt = $('cntConectados'), lista = $('listaConectados');
+  if (!cnt || !lista) return;
+  const rolTxt = r => r === 'admin' ? 'Admin' : (r || 'Usuario');
+  const hora = ms => new Date(ms).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+  const on = Object.entries(presData || {}).map(([uid, ses]) => {
+    const arr = Object.values(ses || {}); if (!arr.length) return null;
+    const desde = Math.min(...arr.map(x => x.desde || Date.now()));
+    return { uid, nombre: arr[0].nombre || 'Usuario', rol: arr[0].rol || '', desde, n: arr.length };
+  }).filter(Boolean).sort((a, b) => (b.uid === miUid) - (a.uid === miUid) || a.nombre.localeCompare(b.nombre));
+  cnt.textContent = on.length; cnt.classList.toggle('on', on.length > 0);
+  if ($('panelConectados').classList.contains('hidden')) return;
+  $('cSub').textContent = on.length ? on.length + (on.length > 1 ? ' personas conectadas ahora' : ' persona conectada ahora') : 'Nadie conectado en este momento';
+  let html = on.map(u => `<div class="cu"><span class="cu-dot"></span><div class="cu-t"><b>${esc(u.nombre)}${u.uid === miUid ? ' <em>(tú)</em>' : ''}</b><small>${esc(rolTxt(u.rol))} · desde las ${esc(hora(u.desde))}${u.n > 1 ? ' · ' + u.n + ' dispositivos' : ''}</small></div></div>`).join('');
+  // Admin / Administrativo: también ven quién NO está conectado
+  const off = (usuarios || []).filter(u => u.activo && !(presData && presData[u.uid]));
+  if (off.length) html += `<div class="cu-h">Sin conexión (${off.length})</div>` + off.map(u => `<div class="cu off"><span class="cu-dot"></span><div class="cu-t"><b>${esc(u.nombres)} ${esc(u.apellidos)}</b><small>${esc(u.categoria)}</small></div></div>`).join('');
+  lista.innerHTML = html;
+}
+function abrirConectados() { $('panelConectados').classList.remove('hidden'); renderConectados(); }
+function cerrarConectados() { $('panelConectados').classList.add('hidden'); }
+$('btnConectados').addEventListener('click', abrirConectados);
+$('pres').addEventListener('click', abrirConectados);
+$('btnCerrarC').addEventListener('click', cerrarConectados);
+$('panelConectados').addEventListener('click', e => { if (e.target === $('panelConectados')) cerrarConectados(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarConectados(); });
 
 // ---- Turnos y archivado: día 08:00–20:00 · noche 20:00–08:00 (hora del dispositivo)
 const MIN_DIA = 8 * 60, MIN_NOCHE = 20 * 60;
@@ -1443,7 +1535,7 @@ function mostrarSplash(uid) {
 let unsub = null;
 // ---- Presencia: quién más está conectado
 const sesionId = Math.random().toString(36).slice(2, 10);
-let presRef = null, unsubConn = null, unsubPres = null, miUid = '';
+let presRef = null, unsubConn = null, unsubPres = null, miUid = '', presData = {};
 function pararEscuchaPresencia() {
   if (unsubConn) { unsubConn(); unsubConn = null; }
   if (unsubPres) { unsubPres(); unsubPres = null; }
@@ -1461,6 +1553,7 @@ function iniciarPresencia(user) {
   });
   unsubPres = onValue(dbRef(db, 'presencia'), snap => {
     const v = snap.val() || {}, otros = [];
+    presData = v; renderConectados();
     Object.entries(v).forEach(([uid, ses]) => {
       if (uid === miUid) return;
       const p = Object.values(ses || {})[0] || {};
@@ -1472,8 +1565,8 @@ function iniciarPresencia(user) {
     el.classList.add('on');
     const n = otros.length, nombres = otros.slice(0, 2).map(o => o.nombre).join(', ');
     el.textContent = n + (n > 1 ? ' conectados: ' : ' conectado: ') + nombres + (n > 2 ? ' +' + (n - 2) : '');
-    el.title = 'Conectados ahora:\n' + otros.map(o => '• ' + o.nombre + (o.rol ? ' (' + o.rol + ')' : '')).join('\n');
-  }, err => { console.error('Presencia: sin acceso (revisa las reglas)', err); $('pres').classList.add('hidden'); });
+    el.title = 'Clic para ver el detalle\n\nConectados ahora:\n' + otros.map(o => '• ' + o.nombre + (o.rol ? ' (' + o.rol + ')' : '')).join('\n');
+  }, err => { console.error('Presencia: sin acceso (revisa las reglas)', err); presData = {}; renderConectados(); $('pres').classList.add('hidden'); });
 }
 async function detenerPresencia() {
   const r = presRef; presRef = null; pararEscuchaPresencia();
@@ -1487,7 +1580,7 @@ onAuthStateChanged(auth, async user => {
   if (unsubH) { unsubH(); unsubH = null; }
   historial = [];
   if (!user) {
-    pararEscuchaPresencia(); presRef = null; $('pres').classList.add('hidden');
+    pararEscuchaPresencia(); presRef = null; $('pres').classList.add('hidden'); presData = {}; $('panelConectados').classList.add('hidden'); renderConectados();
     $('panelHistorial').classList.add('hidden'); $('panelDetalle').classList.add('hidden');
     $('splash').classList.add('hidden');
     try { sessionStorage.removeItem(SPLASH_KEY); } catch (_) {}
