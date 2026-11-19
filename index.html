@@ -152,6 +152,9 @@ label{font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:upperca
 .sep{padding:10px 20px;background:#f0fdf4;color:#166534;font-size:12.5px;font-weight:800;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 #panelHistorial{border:2px solid #16a34a}
 #listaHistorial{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:10px}
+.h-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 6px}.h-tools>span{display:flex;gap:8px;flex-wrap:wrap}.h-tools .hidden{display:none}
+.hsel{width:18px;height:18px;margin:4px 0 0;flex:0 0 auto;padding:0;accent-color:#b42318;cursor:pointer}
+.actions button.btn-del{color:#b42318}
 .hturno{padding:8px 16px;background:#f1f5f9;font-size:12px;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line)}
 .done .txt b{text-decoration:line-through;color:#94a3b8}
 .done{opacity:.8}
@@ -720,6 +723,13 @@ textarea{min-height:96px}
      <div class="header-form pantalla-head"><button type="button" class="btn-back" id="btnCerrarH">← Volver al menú principal</button><h3>Historial de actividades completadas</h3></div>
      <input id="hBuscar" placeholder="Buscar en el historial (texto, autor, turno)…">
      <p class="tip">Las completadas se guardan aquí al terminar cada turno: día 08:00–20:00 · noche 20:00–08:00.</p>
+     <div class="h-tools" id="hTools">
+      <button type="button" class="btn" id="btnHExcel">⬇ Descargar Excel</button>
+      <span id="hGestion" class="hidden">
+       <button type="button" class="btn-hide" id="btnHSelTodo" style="width:auto;margin:0">☑ Seleccionar todo</button>
+       <button type="button" class="btn-hide" id="btnHEliminarSel" style="width:auto;margin:0">🗑️ Eliminar seleccionadas (0)</button>
+      </span>
+     </div>
      <div id="listaHistorial"></div>
     </div>
 
@@ -1469,10 +1479,95 @@ function renderHistorial() {
     const clase = (h.prior || '').replace('Í', 'I');
     const arch = h.archivo ? `<div class="filebox">📎 <a href="#" onclick="descargar('${h.id}');return false">⬇ ${esc(h.archivo.nombre)}</a></div>` : '';
     const obs = (h.observacion && h.observacion.texto) ? `<div class="obs">💬 <b>Observación:</b> ${esc(h.observacion.texto)}</div>` : '';
-    html += `<div class="item p-${clase}"><span class="badge ${clase}">⚠ ${esc(h.prior)}</span><div class="txt"><b>${esc(h.texto)}</b>${arch}<span class="ref" style="color:#64748b">${h.tipo === 'checklist' ? '📋 Checklist de salida' + (h.autor ? ' · por <strong>' + esc(h.autor) + '</strong>' : '') + (h.creado ? ' · ' + esc(fmt(h.creado)) : '') : '✅ Completada'}${h.tipo === 'checklist' ? '' : h.completadoPor ? ' por <strong>' + esc(h.completadoPor) + '</strong>' : ''}${h.tipo === 'checklist' ? '' : (h.completado ? ' · ' + esc(fmt(h.completado)) : '')}${h.tipo === 'checklist' ? '' : (h.autor ? ' · agregada por ' + esc(h.autor) : '')}</span>${obs}</div><div class="actions">${puedeGestionar() && h.tipo !== 'checklist' ? `<button onclick="restaurar('${h.id}')">↩️ Restaurar</button>` : ''}</div></div>`;
+    const chk = puedeGestionar() ? `<input type="checkbox" class="hsel" ${hSel.has(h.id) ? 'checked' : ''} onchange="hToggle('${h.id}',this.checked)" aria-label="Seleccionar">` : '';
+    html += `<div class="item p-${clase}">${chk}<span class="badge ${clase}">⚠ ${esc(h.prior)}</span><div class="txt"><b>${esc(h.texto)}</b>${arch}<span class="ref" style="color:#64748b">${h.tipo === 'checklist' ? '📋 Checklist de salida' + (h.autor ? ' · por <strong>' + esc(h.autor) + '</strong>' : '') + (h.creado ? ' · ' + esc(fmt(h.creado)) : '') : '✅ Completada'}${h.tipo === 'checklist' ? '' : h.completadoPor ? ' por <strong>' + esc(h.completadoPor) + '</strong>' : ''}${h.tipo === 'checklist' ? '' : (h.completado ? ' · ' + esc(fmt(h.completado)) : '')}${h.tipo === 'checklist' ? '' : (h.autor ? ' · agregada por ' + esc(h.autor) : '')}</span>${obs}</div><div class="actions">${puedeGestionar() && h.tipo !== 'checklist' ? `<button onclick="restaurar('${h.id}')">↩️ Restaurar</button>` : ''}${puedeGestionar() ? `<button class="btn-del" onclick="eliminarH('${h.id}')">🗑️ Eliminar</button>` : ''}</div></div>`;
   });
   $('listaHistorial').innerHTML = html || '<p style="color:#94a3b8;padding:12px;margin:0">' + (q ? 'Sin resultados.' : 'El historial está vacío.') + '</p>';
+  hActualizarBarra();
 }
+// ---- Selección, eliminación por líneas y descarga a Excel
+const hSel = new Set();
+function hVisibles() {
+  const q = $('hBuscar').value.trim().toLowerCase();
+  return q ? historial.filter(h => [h.texto, h.autor, h.turno, h.completadoPor].join(' ').toLowerCase().includes(q)) : historial;
+}
+function hActualizarBarra() {
+  const g = puedeGestionar();
+  $('hGestion').classList.toggle('hidden', !g);
+  for (const id of [...hSel]) if (!historial.some(h => h.id === id)) hSel.delete(id);
+  $('btnHEliminarSel').textContent = '🗑️ Eliminar seleccionadas (' + hSel.size + ')';
+  const vis = hVisibles();
+  $('btnHSelTodo').textContent = (vis.length && vis.every(h => hSel.has(h.id))) ? '☐ Quitar selección' : '☑ Seleccionar todo';
+}
+window.hToggle = (id, on) => { on ? hSel.add(id) : hSel.delete(id); hActualizarBarra(); };
+$('btnHSelTodo').addEventListener('click', () => {
+  const vis = hVisibles(), todo = vis.length && vis.every(h => hSel.has(h.id));
+  vis.forEach(h => todo ? hSel.delete(h.id) : hSel.add(h.id));
+  renderHistorial();
+});
+async function hEliminar(ids) {
+  if (!puedeGestionar()) return alert('Tu categoría no permite eliminar del historial');
+  if (!ids.length) return;
+  const cambios = {}; ids.forEach(id => cambios['historial/' + id] = null);
+  try { await update(dbRef(db), cambios); ids.forEach(id => hSel.delete(id)); }
+  catch (e) { alert('Error: ' + (e.code || e.message)); }
+}
+window.eliminarH = async id => {
+  if (!confirm('¿Eliminar esta línea del historial? No se puede deshacer.')) return;
+  await hEliminar([id]);
+};
+$('btnHEliminarSel').addEventListener('click', async () => {
+  const ids = [...hSel]; if (!ids.length) return alert('Marca primero las líneas que quieres eliminar.');
+  if (!confirm('¿Eliminar ' + ids.length + ' línea(s) del historial? No se puede deshacer.')) return;
+  await hEliminar(ids);
+});
+function hFilas() {
+  const fmt = ms => ms ? new Date(ms).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '';
+  return hVisibles().map(h => ({
+    'Turno': h.turno || 'Sin turno',
+    'Tipo': h.tipo === 'checklist' ? 'Checklist de salida' : 'Actividad completada',
+    'Prioridad': h.prior || '',
+    'Actividad': h.texto || '',
+    'Agregada por': h.autor || '',
+    'Fecha creación': fmt(h.creado),
+    'Completada por': h.tipo === 'checklist' ? '' : (h.completadoPor || ''),
+    'Fecha completada': h.tipo === 'checklist' ? '' : fmt(h.completado),
+    'Observación': (h.observacion && h.observacion.texto) || '',
+    'Archivo adjunto': (h.archivo && h.archivo.nombre) || ''
+  }));
+}
+function cargarXLSX() {
+  return new Promise((res, rej) => {
+    if (window.XLSX) return res(window.XLSX);
+    const sc = document.createElement('script');
+    sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    sc.onload = () => window.XLSX ? res(window.XLSX) : rej(new Error('XLSX no disponible'));
+    sc.onerror = () => rej(new Error('No se pudo cargar la librería de Excel'));
+    document.head.appendChild(sc);
+  });
+}
+function bajarBlob(blob, nombre) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+$('btnHExcel').addEventListener('click', async () => {
+  const filas = hFilas(); if (!filas.length) return alert('No hay registros en el historial para descargar.');
+  const hoy = new Date(), pad = n => String(n).padStart(2, '0');
+  const nombre = 'Historial_' + hoy.getFullYear() + '-' + pad(hoy.getMonth() + 1) + '-' + pad(hoy.getDate());
+  try {
+    const X = await cargarXLSX();
+    const ws = X.utils.json_to_sheet(filas);
+    ws['!cols'] = [14, 20, 11, 50, 20, 17, 20, 17, 40, 24].map(w => ({ wch: w }));
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'Historial');
+    X.writeFile(wb, nombre + '.xlsx');
+  } catch (e) {
+    // Respaldo sin internet: tabla HTML que Excel abre directamente
+    const cols = Object.keys(filas[0]);
+    const t = '<html><head><meta charset="UTF-8"></head><body><table border="1"><tr>' + cols.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr>' +
+      filas.map(f => '<tr>' + cols.map(c => '<td>' + esc(f[c]) + '</td>').join('') + '</tr>').join('') + '</table></body></html>';
+    bajarBlob(new Blob(['\ufeff' + t], { type: 'application/vnd.ms-excel' }), nombre + '.xls');
+  }
+});
 window.restaurar = async id => {
   if (!puedeGestionar()) return alert('Tu categoría no permite restaurar actividades');
   const h = historial.find(x => x.id === id); if (!h) return;
