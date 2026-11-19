@@ -544,6 +544,61 @@ textarea{min-height:96px}
 #listaUsuarios .item .actions{flex:1 1 100%;gap:6px}
 #listaUsuarios .item .actions button{padding:6px 10px;font-size:12.5px}
 @media(max-width:600px){#listaUsuarios .item{flex-direction:row}}
+/* ---------- Historial: filas sobrias (sin colores de prioridad, ya fueron atendidas) ---------- */
+#listaHistorial{background:#fff;border-radius:12px}
+#listaHistorial .item.hist{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"chk txt actions";gap:6px 12px;align-items:start;padding:12px 16px;border-left:3px solid #cbd5e1;background:#fff}
+#listaHistorial .item.hist:hover{background:#f8fafc}
+#listaHistorial .item.hist>.hsel{grid-area:chk;margin:3px 0 0}
+#listaHistorial .item.hist>.txt{grid-area:txt;flex:none;min-width:0}
+#listaHistorial .item.hist>.actions{grid-area:actions;gap:6px;align-self:center}
+.hist .htop{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.hist .hprio{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#64748b;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;padding:2px 8px}
+.hist .hok{font-size:11.5px;font-weight:600;color:#1f6b45}
+.hist .txt b{display:block;font-size:14px;line-height:1.45;font-weight:600;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+.hist .txt .ref{margin-top:5px;font-size:12px;line-height:1.4;color:#64748b;word-break:normal;overflow-wrap:anywhere}
+.hist .actions button{padding:5px 10px;font-size:12px;font-weight:600;background:#fff;color:#475569;border:1px solid var(--line);border-radius:7px}
+.hist .actions button.btn-del{color:#b42318}
+@media(max-width:600px){
+  #listaHistorial .item.hist{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"chk txt" ". actions";padding:12px 14px}
+  #listaHistorial .item.hist>.actions{justify-self:start;align-self:start}
+}
+[data-theme="dark"] #listaHistorial,[data-theme="dark"] #listaHistorial .item.hist{background:#0f1a2e}
+[data-theme="dark"] #listaHistorial .item.hist{border-left-color:#33415f}
+[data-theme="dark"] #listaHistorial .item.hist:hover{background:#142139}
+[data-theme="dark"] .hist .hprio{background:#16213a;border-color:#2b3753;color:#aab6cc}
+[data-theme="dark"] .hist .hok{color:#7fd6a8}
+[data-theme="dark"] .hist .txt .ref{color:#97a4bd}
+[data-theme="dark"] .hist .actions button{background:#101a2e;color:#dbe3f1;border-color:#33415f}
+[data-theme="dark"] .hist .actions button.btn-del{color:#f87171}
+/* ---------- Encabezado y menú lateral: siguen el tema claro/oscuro ---------- */
+html:not([data-theme="dark"]) .topbar{background:#fff;color:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(15,23,42,.06)}
+html:not([data-theme="dark"]) .topbar::after{height:2px;background:linear-gradient(90deg,#1f4fb4 0%,#1f4fb4 60%,#e8833a 100%)}
+html:not([data-theme="dark"]) .brand h1{color:var(--navy)}
+html:not([data-theme="dark"]) .brand small{color:#64748b}
+html:not([data-theme="dark"]) .brand-logo{background:#f1f5f9;border:1px solid var(--line)}
+html:not([data-theme="dark"]) .who{background:#f1f5f9;border-color:var(--line);color:#334155}
+html:not([data-theme="dark"]) .out{background:#fff;border-color:#cbd5e1;color:#334155}
+html:not([data-theme="dark"]) .out:hover{background:#f1f5f9}
+html:not([data-theme="dark"]) .conn{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+html:not([data-theme="dark"]) .conn.ok{background:#dcfce7;color:#166534;border-color:#86efac}
+html:not([data-theme="dark"]) .conn.err{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+html:not([data-theme="dark"]) .drawer{background:#fff;color:var(--ink);box-shadow:8px 0 32px rgba(15,23,42,.18)}
+html:not([data-theme="dark"]) .drawer-head{border-bottom-color:var(--line);color:var(--navy)}
+html:not([data-theme="dark"]) .drawer-x{border-color:#cbd5e1;color:#334155}
+html:not([data-theme="dark"]) .drawer-item{color:var(--ink)}
+html:not([data-theme="dark"]) .drawer-item:hover{background:#f1f5f9}
+html:not([data-theme="dark"]) .drawer-item.danger{color:#b42318}
+html:not([data-theme="dark"]) .drawer-sep{background:var(--line)}
+html:not([data-theme="dark"]) .drawer-alert{background:#fef2f2;border-left-color:#b42318}
+html:not([data-theme="dark"]) .menu-tip{color:#64748b}
+html:not([data-theme="dark"]) .cnt{background:#e2e8f0;color:#334155}
+html:not([data-theme="dark"]) .cnt.on{background:#16a34a;color:#fff}
+html:not([data-theme="dark"]) .drawer-overlay{background:rgba(15,23,42,.35)}
+[data-theme="dark"] .drawer{background:#0a1428;box-shadow:8px 0 32px rgba(0,0,0,.55)}
+[data-theme="dark"] .drawer-head{border-bottom-color:#2b3753}
+[data-theme="dark"] .drawer-sep{background:#2b3753}
+[data-theme="dark"] .drawer-item:hover{background:#16213a}
+[data-theme="dark"] .drawer-alert{background:#1a1417}
 </style></head>
 <body>
 <div id="login">
@@ -586,7 +641,6 @@ textarea{min-height:96px}
    <div><h1>Relevo de Turno</h1><small>REVERSA · Logística &amp; Devoluciones</small></div>
   </div>
   <div class="top-actions">
-   <span class="pres hidden" id="pres"></span>
    <span class="conn" id="conn">Conectando…</span>
    <span class="who" id="who"></span>
   </div>
@@ -1411,7 +1465,6 @@ function renderConectados() {
 function abrirConectados() { $('panelConectados').classList.remove('hidden'); renderConectados(); }
 function cerrarConectados() { $('panelConectados').classList.add('hidden'); }
 $('btnConectados').addEventListener('click', abrirConectados);
-$('pres').addEventListener('click', abrirConectados);
 $('btnCerrarC').addEventListener('click', cerrarConectados);
 $('panelConectados').addEventListener('click', e => { if (e.target === $('panelConectados')) cerrarConectados(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarConectados(); });
@@ -1476,11 +1529,16 @@ function renderHistorial() {
   let ultimo = null, html = '';
   v.forEach(h => {
     if (h.turno !== ultimo) { html += `<div class="hturno">${esc(h.turno || 'Sin turno')}</div>`; ultimo = h.turno; }
-    const clase = (h.prior || '').replace('Í', 'I');
+    const prioTxt = h.prior ? h.prior.charAt(0) + h.prior.slice(1).toLowerCase() : '';
     const arch = h.archivo ? `<div class="filebox">📎 <a href="#" onclick="descargar('${h.id}');return false">⬇ ${esc(h.archivo.nombre)}</a></div>` : '';
     const obs = (h.observacion && h.observacion.texto) ? `<div class="obs">💬 <b>Observación:</b> ${esc(h.observacion.texto)}</div>` : '';
     const chk = puedeGestionar() ? `<input type="checkbox" class="hsel" ${hSel.has(h.id) ? 'checked' : ''} onchange="hToggle('${h.id}',this.checked)" aria-label="Seleccionar">` : '';
-    html += `<div class="item p-${clase}">${chk}<span class="badge ${clase}">⚠ ${esc(h.prior)}</span><div class="txt"><b>${esc(h.texto)}</b>${arch}<span class="ref" style="color:#64748b">${h.tipo === 'checklist' ? '📋 Checklist de salida' + (h.autor ? ' · por <strong>' + esc(h.autor) + '</strong>' : '') + (h.creado ? ' · ' + esc(fmt(h.creado)) : '') : '✅ Completada'}${h.tipo === 'checklist' ? '' : h.completadoPor ? ' por <strong>' + esc(h.completadoPor) + '</strong>' : ''}${h.tipo === 'checklist' ? '' : (h.completado ? ' · ' + esc(fmt(h.completado)) : '')}${h.tipo === 'checklist' ? '' : (h.autor ? ' · agregada por ' + esc(h.autor) : '')}</span>${obs}</div><div class="actions">${puedeGestionar() && h.tipo !== 'checklist' ? `<button onclick="restaurar('${h.id}')">↩️ Restaurar</button>` : ''}${puedeGestionar() ? `<button class="btn-del" onclick="eliminarH('${h.id}')">🗑️ Eliminar</button>` : ''}</div></div>`;
+    const esCk = h.tipo === 'checklist';
+    const meta = esCk
+      ? '📋 Checklist de salida' + (h.autor ? ' · por <strong>' + esc(h.autor) + '</strong>' : '') + (h.creado ? ' · ' + esc(fmt(h.creado)) : '')
+      : '✅ Completada' + (h.completadoPor ? ' por <strong>' + esc(h.completadoPor) + '</strong>' : '') + (h.completado ? ' · ' + esc(fmt(h.completado)) : '') + (h.autor ? ' · agregada por ' + esc(h.autor) : '');
+    const top = prioTxt ? `<div class="htop"><span class="hprio" title="Prioridad que tuvo">${esc(prioTxt)}</span></div>` : '';
+    html += `<div class="item hist">${chk}<div class="txt">${top}<b>${esc(h.texto)}</b>${arch}<span class="ref">${meta}</span>${obs}</div><div class="actions">${puedeGestionar() && !esCk ? `<button onclick="restaurar('${h.id}')">↩️ Restaurar</button>` : ''}${puedeGestionar() ? `<button class="btn-del" onclick="eliminarH('${h.id}')">🗑️ Eliminar</button>` : ''}</div></div>`;
   });
   $('listaHistorial').innerHTML = html || '<p style="color:#94a3b8;padding:12px;margin:0">' + (q ? 'Sin resultados.' : 'El historial está vacío.') + '</p>';
   hActualizarBarra();
@@ -1654,14 +1712,7 @@ function iniciarPresencia(user) {
       const p = Object.values(ses || {})[0] || {};
       otros.push({ nombre: p.nombre || 'Usuario', rol: p.rol || '' });
     });
-    const el = $('pres');
-    el.classList.remove('hidden');
-    if (!otros.length) { el.classList.remove('on'); el.textContent = 'Solo tú conectado'; el.title = 'Nadie más está conectado ahora'; return; }
-    el.classList.add('on');
-    const n = otros.length, nombres = otros.slice(0, 2).map(o => o.nombre).join(', ');
-    el.textContent = n + (n > 1 ? ' conectados: ' : ' conectado: ') + nombres + (n > 2 ? ' +' + (n - 2) : '');
-    el.title = 'Clic para ver el detalle\n\nConectados ahora:\n' + otros.map(o => '• ' + o.nombre + (o.rol ? ' (' + o.rol + ')' : '')).join('\n');
-  }, err => { console.error('Presencia: sin acceso (revisa las reglas)', err); presData = {}; renderConectados(); $('pres').classList.add('hidden'); });
+  }, err => { console.error('Presencia: sin acceso (revisa las reglas)', err); presData = {}; renderConectados(); });
 }
 async function detenerPresencia() {
   const r = presRef; presRef = null; pararEscuchaPresencia();
@@ -1675,7 +1726,7 @@ onAuthStateChanged(auth, async user => {
   if (unsubH) { unsubH(); unsubH = null; }
   historial = [];
   if (!user) {
-    pararEscuchaPresencia(); presRef = null; $('pres').classList.add('hidden'); presData = {}; $('panelConectados').classList.add('hidden'); renderConectados();
+    pararEscuchaPresencia(); presRef = null; presData = {}; $('panelConectados').classList.add('hidden'); renderConectados();
     $('panelHistorial').classList.add('hidden'); $('panelDetalle').classList.add('hidden');
     $('splash').classList.add('hidden');
     try { sessionStorage.removeItem(SPLASH_KEY); } catch (_) {}
